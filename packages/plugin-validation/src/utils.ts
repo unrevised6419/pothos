@@ -170,6 +170,9 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
       // un-transformed) data. This flag is scoped to the current field so that
       // sibling fields are still validated and their issues are reported together.
       let hasIssues = false;
+      // For list fields, nested failures are tracked per item so that the type schemas
+      // still run for the items that passed nested validation.
+      const failedItems = new Set<string>();
 
       function addFieldIssues(indices: number[] = []) {
         const add = addIssues([...fieldPath, ...indices]);
@@ -200,6 +203,7 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
               const promise = completeValue(result, (newVal) => {
                 if (newVal.issues) {
                   hasIssues = true;
+                  failedItems.add(indices.join('.'));
                   issues.push(...newVal.issues);
                 } else {
                   newList[i] = newVal.value;
@@ -237,7 +241,7 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
       const promise = completeValue(
         fieldPromises.length ? Promise.all(fieldPromises) : null,
         () => {
-          if (field.value === null || hasIssues) {
+          if (field.value === null) {
             return;
           }
 
@@ -247,7 +251,7 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
               mapped[fieldName],
               field.listDepth,
               (val, i, arr, indices) => {
-                if (val == null) {
+                if (val == null || failedItems.has(indices.join('.'))) {
                   return val;
                 }
 
@@ -274,6 +278,10 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
                 mapped[fieldName] = finalVal;
               });
             });
+          }
+
+          if (hasIssues) {
+            return;
           }
 
           return completeValue(

@@ -382,6 +382,16 @@ describe('Error Handling', () => {
         validate: zod.z.object({ name: zod.z.string().max(3) }),
       });
 
+      const Entry = builder.inputType('Entry', {
+        fields: (t) => ({
+          name: t.string({ validate: zod.z.string().max(3) }),
+          tag: t.string(),
+        }),
+        validate: zod.z
+          .object({ name: zod.z.string(), tag: zod.z.string() })
+          .refine((v) => v.tag !== 'bad', 'bad tag'),
+      });
+
       const AsyncItem = builder.inputType('AsyncItem', {
         fields: (t) => ({
           name: t.string(),
@@ -408,6 +418,16 @@ describe('Error Handling', () => {
             args: {
               items: t.arg({
                 type: [Item],
+                required: true,
+                validate: zod.z.array(zod.z.object({ name: zod.z.string() })).max(5),
+              }),
+            },
+            resolve: () => true,
+          }),
+          entries: t.boolean({
+            args: {
+              entries: t.arg({
+                type: [Entry],
                 required: true,
                 validate: zod.z.array(zod.z.object({ name: zod.z.string() })).max(5),
               }),
@@ -472,6 +492,30 @@ describe('Error Handling', () => {
             "message": "Validation error: items.1.name: Too big: expected string to have <=3 characters",
             "path": [
               "items",
+            ],
+          },
+        ]
+      `);
+    });
+
+    it('runs type schemas for list items whose nested fields passed', async () => {
+      const result = await execute({
+        schema: createSchema(),
+        document: gql`
+          query {
+            entries(entries: [{ name: "toolong", tag: "ok" }, { name: "ok", tag: "bad" }])
+          }
+        `,
+        contextValue: {},
+      });
+
+      expect(result.data?.entries).toBeNull();
+      expect(result.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
+        [
+          {
+            "message": "Validation error: entries.0.name: Too big: expected string to have <=3 characters, entries.1: bad tag",
+            "path": [
+              "entries",
             ],
           },
         ]
