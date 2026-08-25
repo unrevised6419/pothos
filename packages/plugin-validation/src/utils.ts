@@ -164,14 +164,8 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
       const fieldVal = (obj as Record<string, unknown>)[fieldName];
       const fieldPath = [...path, fieldName];
       const fieldPromises: PromiseLike<unknown>[] = [];
-      // Validation for a field runs as a chain: nested input objects, then the schemas
-      // of the field's type, then the field's own schemas. Once any stage reports an
-      // issue, later stages are skipped because they would run against invalid (or
-      // un-transformed) data. This flag is scoped to the current field so that
-      // sibling fields are still validated and their issues are reported together.
+      // per-field, so a failure only skips the remaining schemas for this field
       let hasIssues = false;
-      // For list fields, nested failures are tracked per item so that the type schemas
-      // still run for the items that passed nested validation.
       const failedItems = new Set<string>();
 
       function addFieldIssues(indices: number[] = []) {
