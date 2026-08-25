@@ -199,11 +199,13 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
                   hasIssues = true;
                   failedItems.add(indices.join('.'));
                   issues.push(...newVal.issues);
-                } else {
-                  newList[i] = newVal.value;
+
+                  return val;
                 }
 
-                return newList[i];
+                newList[i] = newVal.value;
+
+                return newVal.value;
               });
 
               if (isThenable(promise)) {

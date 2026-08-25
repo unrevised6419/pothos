@@ -392,6 +392,14 @@ describe('Error Handling', () => {
           .refine((v) => v.tag !== 'bad', 'bad tag'),
       });
 
+      const AsyncEntry = builder.inputType('AsyncEntry', {
+        fields: (t) => ({
+          name: t.string({
+            validate: zod.z.string().refine(async (v) => v !== 'bad', 'bad name'),
+          }),
+        }),
+      });
+
       const AsyncItem = builder.inputType('AsyncItem', {
         fields: (t) => ({
           name: t.string(),
@@ -431,6 +439,12 @@ describe('Error Handling', () => {
                 required: true,
                 validate: zod.z.array(zod.z.object({ name: zod.z.string() })).max(5),
               }),
+            },
+            resolve: () => true,
+          }),
+          asyncEntries: t.boolean({
+            args: {
+              entries: t.arg({ type: [AsyncEntry], required: true }),
             },
             resolve: () => true,
           }),
@@ -516,6 +530,30 @@ describe('Error Handling', () => {
             "message": "Validation error: entries.0.name: Too big: expected string to have <=3 characters, entries.1: bad tag",
             "path": [
               "entries",
+            ],
+          },
+        ]
+      `);
+    });
+
+    it('reports async nested field failures inside list items', async () => {
+      const result = await execute({
+        schema: createSchema(),
+        document: gql`
+          query {
+            asyncEntries(entries: [{ name: "ok" }, { name: "bad" }])
+          }
+        `,
+        contextValue: {},
+      });
+
+      expect(result.data?.asyncEntries).toBeNull();
+      expect(result.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
+        [
+          {
+            "message": "Validation error: entries.1.name: bad name",
+            "path": [
+              "asyncEntries",
             ],
           },
         ]
