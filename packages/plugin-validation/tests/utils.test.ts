@@ -945,7 +945,7 @@ describe('createInputValueMapper', () => {
       });
     });
 
-    it('stops processing subsequent fields after first validation error', () => {
+    it('continues processing subsequent fields after a validation error', () => {
       const mapping = new Map<string, TestInputFieldMapping>([
         ['email', createScalarMapping('email')],
         ['age', createScalarMapping('positive')],
@@ -981,10 +981,13 @@ describe('createInputValueMapper', () => {
       const result = mapper({ email: 'invalid', age: -5 });
 
       expect(emailProcessed).toBe(true);
-      expect(ageProcessed).toBe(false);
+      expect(ageProcessed).toBe(true);
 
       expect(result).toEqual({
-        issues: [{ message: 'Invalid email format', path: ['email'] }],
+        issues: [
+          { message: 'Invalid email format', path: ['email'] },
+          { message: 'Must be positive', path: ['age'] },
+        ],
       });
     });
 

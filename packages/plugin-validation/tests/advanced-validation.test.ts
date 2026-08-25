@@ -930,7 +930,7 @@ describe('Advanced Validation', () => {
       expect(result.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
         [
           {
-            "message": "Validation error: enum1: Invalid input, recursive.float: Invalid input, contactInfo.aliases.0: Aliases should be capitalized, contactInfo.name: Name should be capitalized",
+            "message": "Validation error: enum1: Invalid input, recursive.float: Invalid input, odd: number must be odd, contactInfo.aliases.0: Aliases should be capitalized, contactInfo.email: no example.com email addresses, contactInfo.name: Name should be capitalized",
             "path": [
               "exampleField",
             ],

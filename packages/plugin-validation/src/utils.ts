@@ -162,7 +162,20 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
 
     map.forEach((field, fieldName) => {
       const fieldVal = (obj as Record<string, unknown>)[fieldName];
+      const fieldPath = [...path, fieldName];
       const fieldPromises: PromiseLike<unknown>[] = [];
+      // per-field, so a failure only skips the remaining schemas for this field
+      let hasIssues = false;
+      const failedItems = new Set<string>();
+
+      function addFieldIssues(indices: number[] = []) {
+        const add = addIssues([...fieldPath, ...indices]);
+
+        return (newIssues: readonly StandardSchemaV1.Issue[]) => {
+          hasIssues = true;
+          add(newIssues);
+        };
+      }
 
       if (fieldVal === null || fieldVal === undefined) {
         mapped[fieldName] = fieldVal;
@@ -179,21 +192,20 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
                 return val;
               }
 
-              const result = mapObject(
-                val,
-                field.fields.map!,
-                [...path, fieldName, ...indices],
-                ...args,
-              );
+              const result = mapObject(val, field.fields.map!, [...fieldPath, ...indices], ...args);
 
               const promise = completeValue(result, (newVal) => {
                 if (newVal.issues) {
+                  hasIssues = true;
+                  failedItems.add(indices.join('.'));
                   issues.push(...newVal.issues);
-                } else {
-                  newList[i] = newVal.value;
+
+                  return val;
                 }
 
-                return newList[i];
+                newList[i] = newVal.value;
+
+                return newVal.value;
               });
 
               if (isThenable(promise)) {
@@ -205,14 +217,10 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
           );
         } else {
           const promise = completeValue(
-            mapObject(
-              fieldVal as Record<string, unknown>,
-              field.fields.map,
-              [...path, fieldName],
-              ...args,
-            ),
+            mapObject(fieldVal as Record<string, unknown>, field.fields.map, fieldPath, ...args),
             (newVal) => {
               if (newVal.issues) {
+                hasIssues = true;
                 issues.push(...newVal.issues);
               } else {
                 mapped[fieldName] = newVal.value;
@@ -229,54 +237,64 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
       const promise = completeValue(
         fieldPromises.length ? Promise.all(fieldPromises) : null,
         () => {
-          if (field.value !== null && !issues.length) {
-            if (field.isList) {
-              const list = mapListValue(
-                mapped[fieldName],
-                field.listDepth,
-                (val, i, arr, indices) => {
-                  if (val != null) {
-                    const result = mapType(
-                      val,
-                      field,
-                      addIssues([...path, fieldName, ...indices]),
-                      ...args,
-                    );
+          if (field.value === null) {
+            return;
+          }
 
-                    if (isThenable(result)) {
-                      promises.push(
-                        completeValue(result, (newVal) => {
-                          arr[i] = newVal;
-                        }) as Promise<unknown>,
-                      );
-                    }
-
-                    return result;
-                  }
-
+          if (field.isList) {
+            const itemPromises: PromiseLike<unknown>[] = [];
+            const list = mapListValue(
+              mapped[fieldName],
+              field.listDepth,
+              (val, i, arr, indices) => {
+                if (val == null || failedItems.has(indices.join('.'))) {
                   return val;
-                },
-              );
+                }
+
+                const result = mapType(val, field, addFieldIssues(indices), ...args);
+
+                if (isThenable(result)) {
+                  itemPromises.push(
+                    completeValue(result, (newVal) => {
+                      arr[i] = newVal;
+                    }) as Promise<unknown>,
+                  );
+                }
+
+                return result;
+              },
+            );
+
+            return completeValue(itemPromises.length ? Promise.all(itemPromises) : null, () => {
+              if (hasIssues) {
+                return;
+              }
+
+              return completeValue(mapField(list, field, addFieldIssues(), ...args), (finalVal) => {
+                mapped[fieldName] = finalVal;
+              });
+            });
+          }
+
+          if (hasIssues) {
+            return;
+          }
+
+          return completeValue(
+            mapType(mapped[fieldName], field, addFieldIssues(), ...args),
+            (newVal) => {
+              if (hasIssues) {
+                return;
+              }
 
               return completeValue(
-                mapField(list, field, addIssues([...path, fieldName]), ...args),
+                mapField(newVal, field, addFieldIssues(), ...args),
                 (finalVal) => {
                   mapped[fieldName] = finalVal;
                 },
               );
-            }
-
-            return completeValue(
-              mapType(mapped[fieldName], field, addIssues([...path, fieldName]), ...args),
-              (newVal) =>
-                completeValue(
-                  mapField(newVal, field, addIssues([...path, fieldName]), ...args),
-                  (newVal) => {
-                    mapped[fieldName] = newVal;
-                  },
-                ),
-            );
-          }
+            },
+          );
         },
       );
 
