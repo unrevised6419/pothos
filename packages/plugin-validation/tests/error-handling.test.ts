@@ -359,6 +359,165 @@ describe('Error Handling', () => {
     });
   });
 
+  describe('validation chain per field', () => {
+    function createSchema() {
+      const builder = new SchemaBuilder<{}>({
+        plugins: ['validation'],
+      });
+
+      const Pair = builder.inputType('Pair', {
+        fields: (t) => ({
+          a: t.string(),
+          b: t.string(),
+        }),
+        validate: zod.z
+          .object({ a: zod.z.string(), b: zod.z.string() })
+          .refine((v) => v.a === v.b, 'a must equal b'),
+      });
+
+      const Item = builder.inputType('Item', {
+        fields: (t) => ({
+          name: t.string(),
+        }),
+        validate: zod.z.object({ name: zod.z.string().max(3) }),
+      });
+
+      const AsyncItem = builder.inputType('AsyncItem', {
+        fields: (t) => ({
+          name: t.string(),
+        }),
+        validate: zod.z
+          .object({ name: zod.z.string() })
+          .refine(async (v) => v.name !== 'bad', 'bad item'),
+      });
+
+      builder.queryType({
+        fields: (t) => ({
+          pair: t.boolean({
+            args: {
+              pair: t.arg({
+                type: Pair,
+                required: true,
+                validate: zod.z.object({ a: zod.z.string().max(1) }),
+              }),
+              other: t.arg.string({ validate: zod.z.string().max(1) }),
+            },
+            resolve: () => true,
+          }),
+          items: t.boolean({
+            args: {
+              items: t.arg({
+                type: [Item],
+                required: true,
+                validate: zod.z.array(zod.z.object({ name: zod.z.string() })).max(5),
+              }),
+            },
+            resolve: () => true,
+          }),
+          asyncItems: t.boolean({
+            args: {
+              items: t.arg({
+                type: [AsyncItem],
+                required: true,
+                validate: zod.z.array(zod.z.object({ name: zod.z.string() })).max(5),
+              }),
+            },
+            resolve: () => true,
+          }),
+        }),
+      });
+
+      return builder.toSchema();
+    }
+
+    it('skips field schemas when the type schemas for the same field fail', async () => {
+      const result = await execute({
+        schema: createSchema(),
+        document: gql`
+          query {
+            pair(pair: { a: "xx", b: "yy" }, other: "zz")
+          }
+        `,
+        contextValue: {},
+      });
+
+      expect(result.data?.pair).toBeNull();
+      expect(result.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
+        [
+          {
+            "message": "Validation error: pair: a must equal b, other: Too big: expected string to have <=1 characters",
+            "path": [
+              "pair",
+            ],
+          },
+        ]
+      `);
+    });
+
+    it('skips list field schemas when the type schemas for a list item fail', async () => {
+      const result = await execute({
+        schema: createSchema(),
+        document: gql`
+          query {
+            items(items: [{ name: "ok" }, { name: "toolong" }])
+          }
+        `,
+        contextValue: {},
+      });
+
+      expect(result.data?.items).toBeNull();
+      expect(result.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
+        [
+          {
+            "message": "Validation error: items.1.name: Too big: expected string to have <=3 characters",
+            "path": [
+              "items",
+            ],
+          },
+        ]
+      `);
+    });
+
+    it('waits for async type schemas of list items before running list field schemas', async () => {
+      const schema = createSchema();
+
+      const valid = await execute({
+        schema,
+        document: gql`
+          query {
+            asyncItems(items: [{ name: "ok" }, { name: "fine" }])
+          }
+        `,
+        contextValue: {},
+      });
+
+      expect(valid.errors).toBeUndefined();
+      expect(valid.data?.asyncItems).toBe(true);
+
+      const invalid = await execute({
+        schema,
+        document: gql`
+          query {
+            asyncItems(items: [{ name: "ok" }, { name: "bad" }])
+          }
+        `,
+        contextValue: {},
+      });
+
+      expect(invalid.data?.asyncItems).toBeNull();
+      expect(invalid.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
+        [
+          {
+            "message": "Validation error: items.1: bad item",
+            "path": [
+              "asyncItems",
+            ],
+          },
+        ]
+      `);
+    });
+  });
+
   describe('edge cases', () => {
     it('handles validationError handler that throws an error', async () => {
       const builder = new SchemaBuilder<{
