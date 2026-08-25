@@ -163,6 +163,9 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
     map.forEach((field, fieldName) => {
       const fieldVal = (obj as Record<string, unknown>)[fieldName];
       const fieldPromises: PromiseLike<unknown>[] = [];
+      // Tracks whether a nested input object for this field failed validation, so
+      // that the field's own schemas are skipped without affecting sibling fields.
+      let nestedIssues = false;
 
       if (fieldVal === null || fieldVal === undefined) {
         mapped[fieldName] = fieldVal;
@@ -188,6 +191,7 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
 
               const promise = completeValue(result, (newVal) => {
                 if (newVal.issues) {
+                  nestedIssues = true;
                   issues.push(...newVal.issues);
                 } else {
                   newList[i] = newVal.value;
@@ -213,6 +217,7 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
             ),
             (newVal) => {
               if (newVal.issues) {
+                nestedIssues = true;
                 issues.push(...newVal.issues);
               } else {
                 mapped[fieldName] = newVal.value;
@@ -229,7 +234,7 @@ export function createInputValueMapper<Types extends SchemaTypes, T, Args extend
       const promise = completeValue(
         fieldPromises.length ? Promise.all(fieldPromises) : null,
         () => {
-          if (field.value !== null && !issues.length) {
+          if (field.value !== null && !nestedIssues) {
             if (field.isList) {
               const list = mapListValue(
                 mapped[fieldName],

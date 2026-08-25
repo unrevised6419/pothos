@@ -282,7 +282,74 @@ describe('Error Handling', () => {
       expect(result.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
         [
           {
-            "message": "Multiple validation errors: user.name: Too small: expected string to have >=5 characters",
+            "message": "Multiple validation errors: user.name: Too small: expected string to have >=5 characters; user.email: Invalid email address",
+            "path": [
+              "testField",
+            ],
+          },
+        ]
+      `);
+    });
+
+    it('reports issues from every sibling field of an input object', async () => {
+      const builder = new SchemaBuilder<{}>({
+        plugins: ['validation'],
+      });
+
+      const ExampleInput = builder.inputType('ExampleInput', {
+        fields: (t) => ({
+          fieldA: t.string({ validate: zod.z.string().max(5) }),
+          fieldB: t.string({ validate: zod.z.string().max(5) }),
+          nested: t.field({
+            type: builder.inputType('NestedInput', {
+              fields: (t) => ({
+                fieldC: t.string({ validate: zod.z.string().max(5) }),
+              }),
+            }),
+          }),
+          fieldD: t.string({ validate: zod.z.string().max(5) }),
+        }),
+      });
+
+      builder.queryType({
+        fields: (t) => ({
+          testField: t.boolean({
+            args: {
+              input: t.arg({ type: ExampleInput, required: true }),
+              other: t.arg.string({ validate: zod.z.string().max(5) }),
+            },
+            resolve: () => true,
+          }),
+        }),
+      });
+
+      const schema = builder.toSchema();
+
+      const query = gql`
+        query {
+          testField(
+            input: {
+              fieldA: "toolong"
+              fieldB: "alsotoolong"
+              nested: { fieldC: "toolong" }
+              fieldD: "toolong"
+            }
+            other: "toolong"
+          )
+        }
+      `;
+
+      const result = await execute({
+        schema,
+        document: query,
+        contextValue: {},
+      });
+
+      expect(result.data?.testField).toBeNull();
+      expect(result.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
+        [
+          {
+            "message": "Validation error: input.fieldA: Too big: expected string to have <=5 characters, input.fieldB: Too big: expected string to have <=5 characters, input.nested.fieldC: Too big: expected string to have <=5 characters, input.fieldD: Too big: expected string to have <=5 characters, other: Too big: expected string to have <=5 characters",
             "path": [
               "testField",
             ],
@@ -449,7 +516,7 @@ describe('Error Handling', () => {
       expect(result.errors?.map((e) => e.toJSON())).toMatchInlineSnapshot(`
         [
           {
-            "message": "Input validation failed: Too small: expected string to have >=2 characters",
+            "message": "Input validation failed: Too small: expected string to have >=2 characters, Too small: expected number to be >=18",
             "path": [
               "testField",
             ],
