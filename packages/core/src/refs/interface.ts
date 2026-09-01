@@ -4,9 +4,9 @@ import {
   type OutputRef,
   outputShapeKey,
   type PothosInterfaceTypeConfig,
+  type PothosSchemaTypes,
   parentShapeKey,
   type SchemaTypes,
-  PothosSchemaTypes,
 } from '../types/index.js';
 import { TypeRefWithFields } from './base-with-fields.js';
 

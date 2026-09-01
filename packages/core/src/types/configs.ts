@@ -16,6 +16,7 @@ import type {
   GraphQLUnionTypeConfig,
 } from 'graphql';
 import type { FieldKind, FieldOptionsFromKind, InputFieldMap } from './builder-options.js';
+import type { PothosSchemaTypes } from './index.js';
 import type { SchemaTypes } from './schema-types.js';
 import type {
   FieldNullability,
@@ -28,7 +29,6 @@ import type {
   TypeParam,
 } from './type-params.js';
 import type { MaybePromise, Merge, MergeUnion, PartialResolveInfo } from './utils.js';
-import { PothosSchemaTypes } from './index.js';
 
 export interface PothosQueryTypeConfig
   extends Omit<GraphQLObjectTypeConfig<unknown, object>, 'fields' | 'interfaces'> {

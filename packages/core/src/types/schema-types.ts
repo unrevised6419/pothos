@@ -1,5 +1,5 @@
 import type { InferredFieldOptionsKind } from './builder-options.js';
-import { PothosSchemaTypes } from './index.js';
+import type { PothosSchemaTypes } from './index.js';
 
 export interface SchemaTypes extends PothosSchemaTypes.UserSchemaTypes {
   outputShapes: {

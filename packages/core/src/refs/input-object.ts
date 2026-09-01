@@ -4,7 +4,7 @@ import {
   type InputRef,
   inputShapeKey,
   type PothosInputObjectTypeConfig,
-  PothosSchemaTypes,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '../types/index.js';
 import { BaseTypeRef } from './base.js';

@@ -4,9 +4,9 @@ import {
   type OutputRef,
   outputShapeKey,
   type PothosScalarTypeConfig,
+  type PothosSchemaTypes,
   parentShapeKey,
   type SchemaTypes,
-  PothosSchemaTypes,
 } from '../types/index.js';
 import { BaseTypeRef } from './base.js';
 

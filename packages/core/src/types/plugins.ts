@@ -1,6 +1,6 @@
 import type { BuildCache } from '../build-cache.js';
 import type { BasePlugin } from '../plugins/plugin.js';
-import { PothosSchemaTypes } from './index.js';
+import type { PothosSchemaTypes } from './index.js';
 import type { SchemaTypes } from './schema-types.js';
 
 export type PluginConstructorMap<Types extends SchemaTypes> = {

@@ -27,7 +27,7 @@ import type {
 import type { RootName, SchemaTypes } from '../schema-types.js';
 import type { InterfaceParam, ObjectParam, ParentShape } from '../type-params.js';
 import type { MaybePromise } from '../utils.js';
-import { InputFieldBuilder } from './classes.js';
+import type { InputFieldBuilder } from './classes.js';
 
 export interface BaseTypeOptions<Types extends SchemaTypes = SchemaTypes> {
   description?: string;

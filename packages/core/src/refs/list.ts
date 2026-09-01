@@ -1,7 +1,7 @@
 import {
   outputShapeKey,
+  type PothosSchemaTypes,
   parentShapeKey,
-  PothosSchemaTypes,
   type SchemaTypes,
   type TypeParam,
 } from '../types/index.js';

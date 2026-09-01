@@ -22,6 +22,7 @@ export interface SchemaBuilderOptions<Types extends SchemaTypes> {
   defaults: SchemaTypes['Defaults'] extends Types['Defaults'] ? never : Types['Defaults'];
 }
 
+// biome-ignore lint/suspicious/noEmptyInterface: plugins merge into this via declaration merging, which a type alias cannot do
 export interface V3SchemaBuilderOptions<Types extends SchemaTypes> {}
 
 export interface V3DefaultSchemaTypes {
@@ -35,6 +36,7 @@ export interface BuildSchemaOptions<Types extends SchemaTypes> {
   astNode?: SchemaDefinitionNode;
 }
 
+// biome-ignore lint/suspicious/noEmptyInterface: plugins merge into this via declaration merging, which a type alias cannot do
 export interface Plugins<Types extends SchemaTypes> {}
 
 export interface PothosKindToGraphQLType {

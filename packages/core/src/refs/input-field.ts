@@ -1,7 +1,7 @@
 import {
   inputFieldShapeKey,
-  PothosSchemaTypes,
   type PothosInputFieldConfig,
+  type PothosSchemaTypes,
   type PothosTypeConfig,
   type SchemaTypes,
 } from '../types/index.js';

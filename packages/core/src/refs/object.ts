@@ -6,10 +6,10 @@ import {
   type PothosMutationTypeConfig,
   type PothosObjectTypeConfig,
   type PothosQueryTypeConfig,
+  type PothosSchemaTypes,
   type PothosSubscriptionTypeConfig,
   parentShapeKey,
   type SchemaTypes,
-  PothosSchemaTypes,
 } from '../types/index.js';
 import { TypeRefWithFields } from './base-with-fields.js';
 
