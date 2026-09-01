@@ -17,11 +17,12 @@
     },
     "./types": {
       "import": {
+        "types": "./esm/types/global/index.d.ts",
         "default": "./esm/types/global/index.js"
       },
       "require": {
-        "types": "./dts/index.d.ts",
-        "default": "./lib/index.js"
+        "types": "./dts/types/global/index.d.ts",
+        "default": "./lib/types/global/index.js"
       }
     }
   },
