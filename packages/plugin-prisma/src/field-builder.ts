@@ -6,6 +6,7 @@ import {
   type MaybePromise,
   ObjectRef,
   PothosError,
+  type PothosSchemaTypes,
   RootFieldBuilder,
   type SchemaTypes,
 } from '@pothos/core';

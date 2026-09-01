@@ -4,6 +4,7 @@ import type {
   FieldRef,
   GenericFieldRef,
   InterfaceParam,
+  PothosSchemaTypes,
   SchemaTypes,
 } from '@pothos/core';
 

@@ -16,6 +16,7 @@ import type {
   GraphQLUnionTypeConfig,
 } from 'graphql';
 import type { FieldKind, FieldOptionsFromKind, InputFieldMap } from './builder-options.js';
+import type { PothosSchemaTypes } from './index.js';
 import type { SchemaTypes } from './schema-types.js';
 import type {
   FieldNullability,

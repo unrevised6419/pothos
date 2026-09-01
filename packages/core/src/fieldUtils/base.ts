@@ -6,6 +6,7 @@ import type {
   FieldNullability,
   InputFieldMap,
   PothosInputFieldConfig,
+  PothosSchemaTypes,
   Resolver,
   SchemaTypes,
   ShapeFromTypeParam,

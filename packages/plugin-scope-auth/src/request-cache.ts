@@ -3,6 +3,7 @@ import {
   isThenable,
   type MaybePromise,
   type Path,
+  type PothosSchemaTypes,
   PothosValidationError,
   type SchemaTypes,
 } from '@pothos/core';

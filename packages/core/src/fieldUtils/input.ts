@@ -9,6 +9,7 @@ import type {
   InputType,
   InputTypeParam,
   NormalizeArgs,
+  PothosSchemaTypes,
   SchemaTypes,
 } from '../types/index.js';
 import { inputTypeFromParam } from '../utils/index.js';

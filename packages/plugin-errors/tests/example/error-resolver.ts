@@ -19,46 +19,44 @@ type ResolveShapeWithErrors<Shape, Errors> = [Shape] extends [
 // Should match what you pass as default errors when setting up the builder
 type DefaultErrors = CustomError1;
 
-declare global {
-  export namespace PothosSchemaTypes {
-    export interface InferredFieldOptions<
-      Types extends SchemaTypes,
-      ResolveShape = unknown,
-      Type extends TypeParam<Types> = TypeParam<Types>,
-      Nullable extends FieldNullability<Type> = FieldNullability<Type>,
-      Args extends InputFieldMap = InputFieldMap,
-      ResolveReturnShape = unknown,
-    > {
-      ResolveWithErrors: {
-        errors?: {
-          types?: (new (
-            // biome-ignore lint/suspicious/noExplicitAny: this is fine
-            ...args: any[]
-          ) => ResolveReturnShape)[];
-        };
-        /**
-         * Resolver function for this field
-         * @param parent - The parent object for the current type
-         * @param {object} args - args object based on the args defined for this field
-         * @param {object} context - the context object for the current query, based on `Context` type provided to the SchemaBuilder
-         * @param {GraphQLResolveInfo} info - info about how this field was queried
-         */
-        resolve: Resolver<
-          ResolveShape,
-          InputShapeFromFields<Args>,
-          Types['Context'],
-          ResolveShapeWithErrors<
-            ShapeFromTypeParam<Types, Type, Nullable>,
-            | DefaultErrors
-            | (unknown extends ResolveReturnShape
-                ? never
-                : ResolveReturnShape extends infer T
-                  ? T
-                  : never)
-          >
-        >;
+declare module '@pothos/core/types' {
+  export interface InferredFieldOptions<
+    Types extends SchemaTypes,
+    ResolveShape = unknown,
+    Type extends TypeParam<Types> = TypeParam<Types>,
+    Nullable extends FieldNullability<Type> = FieldNullability<Type>,
+    Args extends InputFieldMap = InputFieldMap,
+    ResolveReturnShape = unknown,
+  > {
+    ResolveWithErrors: {
+      errors?: {
+        types?: (new (
+          // biome-ignore lint/suspicious/noExplicitAny: this is fine
+          ...args: any[]
+        ) => ResolveReturnShape)[];
       };
-    }
+      /**
+       * Resolver function for this field
+       * @param parent - The parent object for the current type
+       * @param {object} args - args object based on the args defined for this field
+       * @param {object} context - the context object for the current query, based on `Context` type provided to the SchemaBuilder
+       * @param {GraphQLResolveInfo} info - info about how this field was queried
+       */
+      resolve: Resolver<
+        ResolveShape,
+        InputShapeFromFields<Args>,
+        Types['Context'],
+        ResolveShapeWithErrors<
+          ShapeFromTypeParam<Types, Type, Nullable>,
+          | DefaultErrors
+          | (unknown extends ResolveReturnShape
+              ? never
+              : ResolveReturnShape extends infer T
+                ? T
+                : never)
+        >
+      >;
+    };
   }
 }
 

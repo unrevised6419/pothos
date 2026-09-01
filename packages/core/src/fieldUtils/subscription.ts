@@ -1,4 +1,4 @@
-import type { SchemaTypes } from '../types/index.js';
+import type { PothosSchemaTypes, SchemaTypes } from '../types/index.js';
 import { RootFieldBuilder } from './root.js';
 
 export class SubscriptionFieldBuilder<

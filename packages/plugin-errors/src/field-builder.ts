@@ -1,5 +1,6 @@
 import {
   type FieldKind,
+  type PothosSchemaTypes,
   RootFieldBuilder,
   type SchemaTypes,
   type TypeParam,

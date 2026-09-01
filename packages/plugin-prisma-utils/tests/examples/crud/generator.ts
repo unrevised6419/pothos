@@ -4,6 +4,7 @@ import {
   InputObjectRef,
   type InputType,
   type InputTypeParam,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '@pothos/core';
 import { getModel, type PrismaModelTypes } from '@pothos/plugin-prisma';

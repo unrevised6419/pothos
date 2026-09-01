@@ -3,6 +3,7 @@ import SchemaBuilder, {
   brandWithType,
   type InterfaceRef,
   type OutputType,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '@pothos/core';
 import type { GraphQLResolveInfo } from 'graphql';

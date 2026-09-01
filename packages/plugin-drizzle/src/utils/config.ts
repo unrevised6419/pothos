@@ -1,4 +1,4 @@
-import { createContextCache, type SchemaTypes } from '@pothos/core';
+import { createContextCache, type PothosSchemaTypes, type SchemaTypes } from '@pothos/core';
 import { type AnyRelations, type Column, getColumns, isTable, type Table } from 'drizzle-orm';
 import type { DrizzleClient } from '../types.js';
 

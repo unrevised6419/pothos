@@ -6,6 +6,7 @@ import SchemaBuilder, {
   type BuildCache,
   type PothosOutputFieldConfig,
   PothosSchemaError,
+  type PothosSchemaTypes,
   type PothosTypeConfig,
   type SchemaTypes,
 } from '@pothos/core';

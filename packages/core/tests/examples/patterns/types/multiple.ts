@@ -1,4 +1,4 @@
-import type { ArgBuilder, ObjectRef } from '../../../../src';
+import type { ArgBuilder, ObjectRef, PothosSchemaTypes } from '../../../../src';
 import type { InputFieldBuilder } from '../../../../src/fieldUtils/input';
 import builder, { type TypesWithDefault } from '../builder';
 

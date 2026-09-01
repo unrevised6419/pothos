@@ -3,6 +3,7 @@ import type { ArgumentRef } from '../refs/arg.js';
 import type { InputFieldRef } from '../refs/input-field.js';
 import type { InterfaceRef } from '../refs/interface.js';
 import type { ObjectRef } from '../refs/object.js';
+import type { PothosSchemaTypes } from './index.js';
 import type { SchemaTypes, VersionedSchemaBuilderOptions } from './schema-types.js';
 import type {
   BaseEnum,

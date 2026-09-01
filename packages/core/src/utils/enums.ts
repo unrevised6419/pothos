@@ -1,4 +1,10 @@
-import type { BaseEnum, EnumValues, PothosEnumValueConfig, SchemaTypes } from '../types/index.js';
+import type {
+  BaseEnum,
+  EnumValues,
+  PothosEnumValueConfig,
+  PothosSchemaTypes,
+  SchemaTypes,
+} from '../types/index.js';
 
 export function normalizeEnumValues<Types extends SchemaTypes>(
   values: EnumValues<SchemaTypes>,

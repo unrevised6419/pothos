@@ -14,6 +14,7 @@ import type {
   InputRef,
   OutputType,
   PothosFieldConfig,
+  PothosSchemaTypes,
   PothosTypeConfig,
   SchemaTypes,
 } from './types/index.js';

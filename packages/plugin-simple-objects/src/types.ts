@@ -1,4 +1,10 @@
-import type { FieldMap, GenericFieldRef, NullableToOptional, SchemaTypes } from '@pothos/core';
+import type {
+  FieldMap,
+  GenericFieldRef,
+  NullableToOptional,
+  PothosSchemaTypes,
+  SchemaTypes,
+} from '@pothos/core';
 
 export type SimpleObjectFieldsShape<Types extends SchemaTypes, Fields extends FieldMap> = (
   t: PothosSchemaTypes.RootFieldBuilder<Types, unknown, 'SimpleObject'>,

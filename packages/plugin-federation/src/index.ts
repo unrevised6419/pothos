@@ -5,6 +5,7 @@ import SchemaBuilder, {
   type PothosEnumValueConfig,
   type PothosInputFieldConfig,
   type PothosOutputFieldConfig,
+  type PothosSchemaTypes,
   type PothosTypeConfig,
   type SchemaTypes,
   type TypeParam,

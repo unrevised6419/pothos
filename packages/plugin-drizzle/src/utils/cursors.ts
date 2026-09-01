@@ -2,6 +2,7 @@ import {
   decodeBase64,
   encodeBase64,
   type MaybePromise,
+  type PothosSchemaTypes,
   PothosValidationError,
   type SchemaTypes,
 } from '@pothos/core';

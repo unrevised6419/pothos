@@ -2,6 +2,7 @@ import {
   ImplementableObjectRef,
   type ObjectParam,
   ObjectRef,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '@pothos/core';
 import type { NodeRefOptions } from './types.js';

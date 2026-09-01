@@ -1,5 +1,6 @@
 import {
   outputShapeKey,
+  type PothosSchemaTypes,
   parentShapeKey,
   type SchemaTypes,
   type TypeParam,

@@ -6,6 +6,7 @@ import {
   type PothosMutationTypeConfig,
   type PothosObjectTypeConfig,
   type PothosQueryTypeConfig,
+  type PothosSchemaTypes,
   type PothosSubscriptionTypeConfig,
   parentShapeKey,
   type SchemaTypes,

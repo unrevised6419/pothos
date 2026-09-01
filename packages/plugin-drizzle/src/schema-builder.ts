@@ -6,6 +6,7 @@ import SchemaBuilder, {
   type ObjectRef,
   type OutputType,
   PothosError,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '@pothos/core';
 import type { Column } from 'drizzle-orm';

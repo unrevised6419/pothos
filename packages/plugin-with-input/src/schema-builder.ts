@@ -1,4 +1,9 @@
-import { InputFieldBuilder, RootFieldBuilder, type SchemaTypes } from '@pothos/core';
+import {
+  InputFieldBuilder,
+  type PothosSchemaTypes,
+  RootFieldBuilder,
+  type SchemaTypes,
+} from '@pothos/core';
 
 const rootBuilderProto = RootFieldBuilder.prototype as PothosSchemaTypes.RootFieldBuilder<
   SchemaTypes,

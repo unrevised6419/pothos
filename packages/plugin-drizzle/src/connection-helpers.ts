@@ -1,4 +1,9 @@
-import type { InputFieldMap, InputShapeFromFields, SchemaTypes } from '@pothos/core';
+import type {
+  InputFieldMap,
+  InputShapeFromFields,
+  PothosSchemaTypes,
+  SchemaTypes,
+} from '@pothos/core';
 import type {
   BuildQueryResult,
   DBQueryConfig,

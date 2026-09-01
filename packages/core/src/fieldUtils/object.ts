@@ -1,4 +1,4 @@
-import type { SchemaTypes } from '../types/index.js';
+import type { PothosSchemaTypes, SchemaTypes } from '../types/index.js';
 import { FieldBuilder } from './builder.js';
 
 export class ObjectFieldBuilder<Types extends SchemaTypes, ParentShape> extends FieldBuilder<

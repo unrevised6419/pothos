@@ -3,6 +3,7 @@ import {
   type InterfaceParam,
   InterfaceRef,
   type InterfaceTypeOptions,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '@pothos/core';
 import type DataLoader from 'dataloader';

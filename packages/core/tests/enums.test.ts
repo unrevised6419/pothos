@@ -1,6 +1,6 @@
 import { execute } from 'graphql';
 import gql from 'graphql-tag';
-import SchemaBuilder, { type SchemaTypes } from '../src';
+import SchemaBuilder, { type PothosSchemaTypes, type SchemaTypes } from '../src';
 
 describe('ways to add enums', () => {
   enum ChessPieceNumeric {

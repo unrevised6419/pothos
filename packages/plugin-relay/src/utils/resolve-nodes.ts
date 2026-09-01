@@ -4,6 +4,7 @@ import {
   type MaybePromise,
   type ObjectParam,
   type OutputType,
+  type PothosSchemaTypes,
   PothosValidationError,
   type SchemaTypes,
 } from '@pothos/core';

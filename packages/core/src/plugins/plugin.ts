@@ -12,6 +12,7 @@ import type {
   PothosInterfaceTypeConfig,
   PothosObjectTypeConfig,
   PothosOutputFieldConfig,
+  PothosSchemaTypes,
   PothosTypeConfig,
   PothosUnionTypeConfig,
   SchemaTypes,

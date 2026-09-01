@@ -1,4 +1,4 @@
-import type { PothosUnionTypeConfig, SchemaTypes } from '../types/index.js';
+import type { PothosSchemaTypes, PothosUnionTypeConfig, SchemaTypes } from '../types/index.js';
 import {
   type ObjectParam,
   type OutputRef,

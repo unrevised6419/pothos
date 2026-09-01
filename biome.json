@@ -233,7 +233,6 @@
     }
   },
   "javascript": {
-    "globals": ["PothosSchemaTypes"],
     "formatter": {
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
@@ -297,7 +296,6 @@
       "includes": ["**/packages/**/*/test/**/*", "**/packages/**/*/tests/**/*"],
       "javascript": {
         "globals": [
-          "PothosSchemaTypes",
           "test",
           "expect",
           "describe",

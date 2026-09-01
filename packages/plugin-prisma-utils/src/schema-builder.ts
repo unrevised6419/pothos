@@ -9,6 +9,7 @@ import SchemaBuilder, {
   type InputType,
   type InputTypeParam,
   PothosSchemaError,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '@pothos/core';
 import { getModel, type PrismaModelTypes } from '@pothos/plugin-prisma';

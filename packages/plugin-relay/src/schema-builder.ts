@@ -13,6 +13,7 @@ import SchemaBuilder, {
   type ObjectFieldsShape,
   ObjectRef,
   type OutputRef,
+  type PothosSchemaTypes,
   PothosValidationError,
   type Resolver,
   type SchemaTypes,

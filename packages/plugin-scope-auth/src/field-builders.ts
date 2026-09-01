@@ -2,6 +2,7 @@ import {
   InterfaceFieldBuilder,
   MutationFieldBuilder,
   ObjectFieldBuilder,
+  type PothosSchemaTypes,
   QueryFieldBuilder,
   type SchemaTypes,
   SubscriptionFieldBuilder,

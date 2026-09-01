@@ -3,6 +3,7 @@ import {
   type InterfaceRef,
   type ObjectRef,
   PothosSchemaError,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '@pothos/core';
 import type { GraphQLResolveInfo } from 'graphql';

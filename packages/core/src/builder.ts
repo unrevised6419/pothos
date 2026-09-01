@@ -60,6 +60,7 @@ import type {
   ParentShape,
   PluginConstructorMap,
   PothosInputObjectTypeConfig,
+  PothosSchemaTypes,
   QueryFieldsShape,
   QueryFieldThunk,
   RecursivelyNormalizeNullableFields,

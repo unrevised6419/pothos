@@ -43,6 +43,7 @@ import {
   type PothosOutputFieldType,
   type PothosQueryTypeConfig,
   type PothosScalarTypeConfig,
+  type PothosSchemaTypes,
   type PothosSubscriptionTypeConfig,
   type PothosTypeConfig,
   type PothosTypeKind,

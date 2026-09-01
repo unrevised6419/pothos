@@ -3,6 +3,7 @@ import {
   type InterfaceParam,
   type MaybePromise,
   ObjectRef,
+  type PothosSchemaTypes,
   RootFieldBuilder,
   type SchemaTypes,
 } from '@pothos/core';

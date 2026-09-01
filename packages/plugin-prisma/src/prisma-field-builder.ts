@@ -11,6 +11,7 @@ import {
   type NormalizeArgs,
   ObjectRef,
   type PluginName,
+  type PothosSchemaTypes,
   RootFieldBuilder,
   type SchemaTypes,
   type ShapeFromTypeParam,

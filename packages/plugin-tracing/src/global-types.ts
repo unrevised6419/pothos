@@ -9,41 +9,39 @@ import type {
 import type { PothosTracingPlugin } from './index.js';
 import type { TracingFieldOptions, TracingFieldWrapper } from './types.js';
 
-declare global {
-  export namespace PothosSchemaTypes {
-    export interface Plugins<Types extends SchemaTypes> {
-      tracing: PothosTracingPlugin<Types>;
-    }
+declare module '@pothos/core/types' {
+  export interface Plugins<Types extends SchemaTypes> {
+    tracing: PothosTracingPlugin<Types>;
+  }
 
-    export interface SchemaBuilderOptions<Types extends SchemaTypes> {
-      tracing?: {
-        default:
-          | Types['Tracing']
-          | ((
-              config: PothosOutputFieldConfig<Types>,
-            ) => TracingFieldOptions<Types, unknown, Record<string, unknown>>);
-        wrap: TracingFieldWrapper<Types>;
-      };
-    }
+  export interface SchemaBuilderOptions<Types extends SchemaTypes> {
+    tracing?: {
+      default:
+        | Types['Tracing']
+        | ((
+            config: PothosOutputFieldConfig<Types>,
+          ) => TracingFieldOptions<Types, unknown, Record<string, unknown>>);
+      wrap: TracingFieldWrapper<Types>;
+    };
+  }
 
-    export interface UserSchemaTypes {
-      Tracing: unknown;
-    }
+  export interface UserSchemaTypes {
+    Tracing: unknown;
+  }
 
-    export interface ExtendDefaultTypes<PartialTypes extends Partial<UserSchemaTypes>> {
-      Tracing: unknown extends PartialTypes['Tracing'] ? boolean : PartialTypes['Tracing'];
-    }
+  export interface ExtendDefaultTypes<PartialTypes extends Partial<UserSchemaTypes>> {
+    Tracing: unknown extends PartialTypes['Tracing'] ? boolean : PartialTypes['Tracing'];
+  }
 
-    export interface FieldOptions<
-      Types extends SchemaTypes,
-      ParentShape,
-      Type extends TypeParam<Types>,
-      Nullable extends FieldNullability<Type>,
-      Args extends InputFieldMap,
-      ResolveShape,
-      ResolveReturnShape,
-    > {
-      tracing?: TracingFieldOptions<Types, ParentShape, InputShapeFromFields<Args>>;
-    }
+  export interface FieldOptions<
+    Types extends SchemaTypes,
+    ParentShape,
+    Type extends TypeParam<Types>,
+    Nullable extends FieldNullability<Type>,
+    Args extends InputFieldMap,
+    ResolveShape,
+    ResolveReturnShape,
+  > {
+    tracing?: TracingFieldOptions<Types, ParentShape, InputShapeFromFields<Args>>;
   }
 }

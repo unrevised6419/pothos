@@ -6,6 +6,7 @@ import type {
   InputFieldsFromShape,
   NullableToOptional,
   ObjectParam,
+  PothosSchemaTypes,
   SchemaTypes,
 } from '@pothos/core';
 

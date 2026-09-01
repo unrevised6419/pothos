@@ -10,6 +10,7 @@ import SchemaBuilder, {
   type PothosOutputFieldConfig,
   type PothosQueryTypeConfig,
   PothosSchemaError,
+  type PothosSchemaTypes,
   type PothosSubscriptionTypeConfig,
   RootFieldBuilder,
   type SchemaTypes,
