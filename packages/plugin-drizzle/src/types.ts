@@ -21,6 +21,7 @@ import {
   type ObjectTypeOptions,
   type OutputShape,
   type OutputType,
+  type PothosSchemaTypes,
   type SchemaTypes,
   type ShapeFromTypeParam,
   type TypeParam,

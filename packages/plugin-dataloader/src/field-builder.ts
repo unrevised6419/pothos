@@ -5,6 +5,7 @@ import {
   type InputFieldMap,
   type InputShapeFromFields,
   type OutputType,
+  type PothosSchemaTypes,
   RootFieldBuilder,
   type SchemaTypes,
   type ShapeFromTypeParam,

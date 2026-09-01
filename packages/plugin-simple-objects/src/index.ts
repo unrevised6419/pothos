@@ -9,6 +9,7 @@ import SchemaBuilder, {
   type ObjectFieldsShape,
   ObjectRef,
   type ParentShape,
+  type PothosSchemaTypes,
   type SchemaTypes,
   type UnionToIntersection,
 } from '@pothos/core';

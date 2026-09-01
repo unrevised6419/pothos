@@ -541,7 +541,7 @@ async function printCode() {
   const config = await resolveConfig(__dirname);
   const formatted = await format(
     /* ts */ `
-  import { InputObjectRef } from '@pothos/core';
+  import { InputObjectRef, type PothosSchemaTypes } from '@pothos/core';
   import * as Prisma from '../../../client/client';
   import { builder } from '../builder';
 

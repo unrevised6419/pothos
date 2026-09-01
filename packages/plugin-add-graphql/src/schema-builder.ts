@@ -11,6 +11,7 @@ import SchemaBuilder, {
   type ObjectParam,
   type ObjectRef,
   type OutputType,
+  type PothosSchemaTypes,
   type SchemaTypes,
   type TypeParam,
 } from '@pothos/core';

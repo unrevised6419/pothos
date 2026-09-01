@@ -17,6 +17,7 @@ import {
   type ObjectRef,
   type OutputShape,
   type OutputType,
+  type PothosSchemaTypes,
   type SchemaTypes,
   type ShapeFromTypeParam,
   type ShapeWithNullability,

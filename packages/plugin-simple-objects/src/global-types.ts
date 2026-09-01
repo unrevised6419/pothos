@@ -4,9 +4,12 @@ import type {
   InputFieldMap,
   InterfaceFieldsShape,
   InterfaceParam,
+  InterfaceRef,
   Normalize,
   ObjectFieldsShape,
+  ObjectRef,
   ParentShape,
+  PothosSchemaTypes,
   SchemaTypes,
   TypeParam,
   UnionToIntersection,
@@ -14,93 +17,93 @@ import type {
 import type { PothosSimpleObjectsPlugin } from './index.js';
 import type { OutputShapeFromFields, SimpleObjectFieldsShape } from './types.js';
 
-declare global {
-  export namespace PothosSchemaTypes {
-    export interface Plugins<Types extends SchemaTypes> {
-      simpleObjects: PothosSimpleObjectsPlugin<Types>;
-    }
-    export interface SchemaBuilder<Types extends SchemaTypes> {
-      simpleObject: <
-        const Interfaces extends InterfaceParam<Types>[],
-        Fields extends FieldMap,
-        Shape extends Normalize<
-          OutputShapeFromFields<Fields> &
-            UnionToIntersection<ParentShape<Types, Interfaces[number]>>
-        >,
-      >(
-        name: string,
-        options: SimpleObjectTypeOptions<Types, Interfaces, Fields, Shape>,
-        fields?: ObjectFieldsShape<Types, Shape>,
-      ) => ObjectRef<Types, Shape>;
+declare module '@pothos/core/types' {
+  export interface Plugins<Types extends SchemaTypes> {
+    simpleObjects: PothosSimpleObjectsPlugin<Types>;
+  }
+  export interface SchemaBuilder<Types extends SchemaTypes> {
+    simpleObject: <
+      const Interfaces extends InterfaceParam<Types>[],
+      Fields extends FieldMap,
+      Shape extends Normalize<
+        OutputShapeFromFields<Fields> & UnionToIntersection<ParentShape<Types, Interfaces[number]>>
+      >,
+    >(
+      name: string,
+      options: SimpleObjectTypeOptions<Types, Interfaces, Fields, Shape>,
+      fields?: ObjectFieldsShape<Types, Shape>,
+    ) => ObjectRef<Types, Shape>;
 
-      simpleInterface: <
-        const Interfaces extends InterfaceParam<Types>[],
-        Fields extends FieldMap,
-        Shape extends Normalize<
-          OutputShapeFromFields<Fields> &
-            UnionToIntersection<ParentShape<Types, Interfaces[number]>>
-        >,
-      >(
-        name: string,
-        options: SimpleInterfaceTypeOptions<Types, Interfaces, Fields, Shape>,
-        fields?: InterfaceFieldsShape<Types, Shape>,
-      ) => InterfaceRef<Types, Shape>;
-    }
+    simpleInterface: <
+      const Interfaces extends InterfaceParam<Types>[],
+      Fields extends FieldMap,
+      Shape extends Normalize<
+        OutputShapeFromFields<Fields> & UnionToIntersection<ParentShape<Types, Interfaces[number]>>
+      >,
+    >(
+      name: string,
+      options: SimpleInterfaceTypeOptions<Types, Interfaces, Fields, Shape>,
+      fields?: InterfaceFieldsShape<Types, Shape>,
+    ) => InterfaceRef<Types, Shape>;
+  }
 
-    export interface PothosKindToGraphQLType {
-      SimpleObject: 'Object';
-      SimpleInterface: 'Interface';
-    }
+  export interface PothosKindToGraphQLType {
+    SimpleObject: 'Object';
+    SimpleInterface: 'Interface';
+  }
 
-    export interface FieldOptionsByKind<
-      Types extends SchemaTypes,
+  export interface FieldOptionsByKind<
+    Types extends SchemaTypes,
+    ParentShape,
+    Type extends TypeParam<Types>,
+    Nullable extends FieldNullability<Type>,
+    Args extends InputFieldMap,
+    ResolveShape,
+    ResolveReturnShape,
+  > {
+    SimpleObject: PothosSchemaTypes.ObjectFieldOptions<
+      Types,
       ParentShape,
-      Type extends TypeParam<Types>,
-      Nullable extends FieldNullability<Type>,
-      Args extends InputFieldMap,
-      ResolveShape,
-      ResolveReturnShape,
-    > {
-      SimpleObject: ObjectFieldOptions<
-        Types,
-        ParentShape,
-        Type,
-        Nullable,
-        Args,
-        ResolveReturnShape
-      >;
+      Type,
+      Nullable,
+      Args,
+      ResolveReturnShape
+    >;
 
-      SimpleInterface: InterfaceFieldOptions<
-        Types,
-        ParentShape,
-        Type,
-        Nullable,
-        Args,
-        ResolveReturnShape
-      >;
-    }
+    SimpleInterface: PothosSchemaTypes.InterfaceFieldOptions<
+      Types,
+      ParentShape,
+      Type,
+      Nullable,
+      Args,
+      ResolveReturnShape
+    >;
+  }
 
-    export type SimpleObjectTypeOptions<
-      Types extends SchemaTypes,
-      Interfaces extends InterfaceParam<Types>[],
-      Fields extends FieldMap,
-      Shape,
-    > = Omit<
-      ObjectTypeOptions<Types, Shape> | ObjectTypeWithInterfaceOptions<Types, Shape, Interfaces>,
+  export type SimpleObjectTypeOptions<
+    Types extends SchemaTypes,
+    Interfaces extends InterfaceParam<Types>[],
+    Fields extends FieldMap,
+    Shape,
+  > = Omit<
+    | PothosSchemaTypes.ObjectTypeOptions<Types, Shape>
+    | PothosSchemaTypes.ObjectTypeWithInterfaceOptions<Types, Shape, Interfaces>,
+    'fields' | 'interfaces'
+  > & {
+    interfaces?: (() => Interfaces) | Interfaces;
+    fields?: SimpleObjectFieldsShape<Types, Fields>;
+  };
+
+  export interface SimpleInterfaceTypeOptions<
+    Types extends SchemaTypes,
+    Interfaces extends InterfaceParam<Types>[],
+    Fields extends FieldMap,
+    Shape,
+  > extends Omit<
+      PothosSchemaTypes.InterfaceTypeOptions<Types, Shape, Interfaces>,
       'fields' | 'interfaces'
-    > & {
-      interfaces?: (() => Interfaces) | Interfaces;
-      fields?: SimpleObjectFieldsShape<Types, Fields>;
-    };
-
-    export interface SimpleInterfaceTypeOptions<
-      Types extends SchemaTypes,
-      Interfaces extends InterfaceParam<Types>[],
-      Fields extends FieldMap,
-      Shape,
-    > extends Omit<InterfaceTypeOptions<Types, Shape, Interfaces>, 'fields' | 'interfaces'> {
-      interfaces?: (() => Interfaces) | Interfaces;
-      fields?: SimpleObjectFieldsShape<Types, Fields>;
-    }
+    > {
+    interfaces?: (() => Interfaces) | Interfaces;
+    fields?: SimpleObjectFieldsShape<Types, Fields>;
   }
 }

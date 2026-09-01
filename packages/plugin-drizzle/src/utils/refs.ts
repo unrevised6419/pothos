@@ -1,4 +1,4 @@
-import { PothosSchemaError, type SchemaTypes } from '@pothos/core';
+import { PothosSchemaError, type PothosSchemaTypes, type SchemaTypes } from '@pothos/core';
 import { DrizzleInterfaceRef, type DrizzleRef } from '../interface-ref.js';
 import { DrizzleObjectRef } from '../object-ref.js';
 

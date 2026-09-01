@@ -1,4 +1,4 @@
-import type { FieldRef, MaybePromise } from '@pothos/core';
+import type { FieldRef, MaybePromise, PothosSchemaTypes } from '@pothos/core';
 import { type FieldKind, ObjectRef, RootFieldBuilder, type SchemaTypes } from '@pothos/core';
 import type { TableRelationalConfig } from 'drizzle-orm';
 import type { GraphQLResolveInfo } from 'graphql';

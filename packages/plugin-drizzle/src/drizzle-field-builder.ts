@@ -13,6 +13,7 @@ import {
   ObjectRef,
   type PluginName,
   PothosSchemaError,
+  type PothosSchemaTypes,
   RootFieldBuilder,
   type SchemaTypes,
   type ShapeFromTypeParam,

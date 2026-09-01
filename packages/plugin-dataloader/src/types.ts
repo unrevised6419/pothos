@@ -16,6 +16,7 @@ import type {
   OutputRef,
   OutputShape,
   OutputType,
+  PothosSchemaTypes,
   Resolver,
   SchemaTypes,
   ShapeFromTypeParam,

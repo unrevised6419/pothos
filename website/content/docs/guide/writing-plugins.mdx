@@ -70,16 +70,14 @@ your types.
 
 `global-types.ts` must contain the following:
 
-1. A declaration of the `PothosSchemaTypes` namespace
+1. A module augmentation of `@pothos/core/types`
 
    ```typescript
-   declare global {
-     export namespace PothosSchemaTypes {}
-   }
+   declare module '@pothos/core/types' {}
    ```
 
 2. An addition to the `Plugins` interface that maps the plugin name, to the plugin type \(this needs
-   to be inside the `PothosSchemaTypes` namespace\)
+   to be inside the `declare module` block\)
 
    ```typescript
    export interface Plugins<Types extends SchemaTypes> {
@@ -87,9 +85,17 @@ your types.
    }
    ```
 
-`global-types.ts` should NOT include definitions that do not belong to the `PothosSchemaTypes`
-namespace. Types for your plugin should be added to a separate `types.ts` file, and imported as
-needed into `global-types.ts`.
+`global-types.ts` should NOT include definitions that do not belong to `@pothos/core/types`. Types
+for your plugin should be added to a separate `types.ts` file, and imported as needed into
+`global-types.ts`.
+
+Because the augmented interfaces are module members rather than members of an ambient namespace,
+sibling types are no longer in scope by bare name inside the `declare module` block. Import the
+`PothosSchemaTypes` namespace from `@pothos/core` and qualify them \(`PothosSchemaTypes.ObjectRef`,
+`PothosSchemaTypes.ObjectFieldOptions`, and so on\). Some of these names also exist as top-level
+exports of `@pothos/core` with a different signature — `ObjectTypeOptions`, `InterfaceTypeOptions`
+and `EnumTypeOptions` — so importing them by bare name resolves to the wrong type instead of
+failing.
 
 To add properties to the various config objects used by the `SchemaBuilder`, you should start by
 finding the interface that defines that config object in `@pothos/core`. Currently there are 4 main

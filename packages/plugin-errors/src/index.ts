@@ -8,6 +8,7 @@ import SchemaBuilder, {
   type PothosOutputFieldConfig,
   type PothosOutputFieldType,
   PothosSchemaError,
+  type PothosSchemaTypes,
   type SchemaTypes,
   type TypeParam,
   unwrapOutputFieldType,

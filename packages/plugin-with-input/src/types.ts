@@ -7,6 +7,7 @@ import type {
   InputFieldRef,
   InputRef,
   InputShapeFromFields,
+  PothosSchemaTypes,
   SchemaTypes,
   TypeParam,
 } from '@pothos/core';

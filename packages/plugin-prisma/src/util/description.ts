@@ -1,4 +1,4 @@
-import type { SchemaTypes } from '@pothos/core';
+import type { PothosSchemaTypes, SchemaTypes } from '@pothos/core';
 import { getFieldData, getModel } from './datamodel.js';
 
 export function getFieldDescription<Types extends SchemaTypes>(

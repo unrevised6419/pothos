@@ -1,4 +1,9 @@
-import SchemaBuilder, { isThenable, type MaybePromise, type SchemaTypes } from '@pothos/core';
+import SchemaBuilder, {
+  isThenable,
+  type MaybePromise,
+  type PothosSchemaTypes,
+  type SchemaTypes,
+} from '@pothos/core';
 import { ForbiddenError } from './errors.js';
 import RequestCache from './request-cache.js';
 import type { AuthFailure } from './types.js';

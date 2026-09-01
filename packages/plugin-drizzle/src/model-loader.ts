@@ -1,4 +1,4 @@
-import { createContextCache, type SchemaTypes } from '@pothos/core';
+import { createContextCache, type PothosSchemaTypes, type SchemaTypes } from '@pothos/core';
 import {
   type AnyTable,
   type Column,

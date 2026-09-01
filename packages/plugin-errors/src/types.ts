@@ -8,6 +8,7 @@ import type {
   InputShapeFromFields,
   Normalize,
   ObjectParam,
+  PothosSchemaTypes,
   Resolver,
   SchemaTypes,
   ShapeFromTypeParam,

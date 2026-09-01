@@ -7,6 +7,7 @@ import type {
   NormalizeArgs,
   OutputType,
   PluginName,
+  PothosSchemaTypes,
   SchemaTypes,
   ShapeFromTypeParam,
   TypeParam,
@@ -37,258 +38,248 @@ import type {
   ShapeFromIdColumns,
 } from './types.js';
 
-declare global {
-  export namespace PothosSchemaTypes {
-    export interface Plugins<Types extends SchemaTypes> {
-      drizzle: PothosDrizzlePlugin<Types>;
-    }
+declare module '@pothos/core/types' {
+  export interface Plugins<Types extends SchemaTypes> {
+    drizzle: PothosDrizzlePlugin<Types>;
+  }
 
-    export interface SchemaBuilderOptions<Types extends SchemaTypes> {
-      drizzle: DrizzlePluginOptions<Types>;
-    }
+  export interface SchemaBuilderOptions<Types extends SchemaTypes> {
+    drizzle: DrizzlePluginOptions<Types>;
+  }
 
-    export interface UserSchemaTypes {
-      DrizzleRelations: TablesRelationalConfig;
-    }
+  export interface UserSchemaTypes {
+    DrizzleRelations: TablesRelationalConfig;
+  }
 
-    export interface ExtendDefaultTypes<PartialTypes extends Partial<UserSchemaTypes>> {
-      DrizzleRelations: PartialTypes['DrizzleRelations'] & {};
-    }
+  export interface ExtendDefaultTypes<PartialTypes extends Partial<UserSchemaTypes>> {
+    DrizzleRelations: PartialTypes['DrizzleRelations'] & {};
+  }
 
-    export interface SchemaBuilder<Types extends SchemaTypes> {
-      drizzleObject: <
-        const Interfaces extends InterfaceParam<Types>[],
-        Table extends keyof Types['DrizzleRelations'],
-        Selection extends
-          | DBQueryConfig<'one', Types['DrizzleRelations'], Types['DrizzleRelations'][Table]>
-          | true,
-        Shape = BuildQueryResult<
-          Types['DrizzleRelations'],
-          Types['DrizzleRelations'][Table],
-          true extends Selection ? true : Selection & { columns: {} }
-        >,
-      >(
-        table: Table,
-        options: DrizzleObjectOptions<Types, Table, Shape, Selection, Interfaces>,
-      ) => DrizzleObjectRef<Types, Table, Shape>;
+  export interface SchemaBuilder<Types extends SchemaTypes> {
+    drizzleObject: <
+      const Interfaces extends InterfaceParam<Types>[],
+      Table extends keyof Types['DrizzleRelations'],
+      Selection extends
+        | DBQueryConfig<'one', Types['DrizzleRelations'], Types['DrizzleRelations'][Table]>
+        | true,
+      Shape = BuildQueryResult<
+        Types['DrizzleRelations'],
+        Types['DrizzleRelations'][Table],
+        true extends Selection ? true : Selection & { columns: {} }
+      >,
+    >(
+      table: Table,
+      options: DrizzleObjectOptions<Types, Table, Shape, Selection, Interfaces>,
+    ) => DrizzleObjectRef<Types, Table, Shape>;
 
-      drizzleInterface: <
-        const Interfaces extends InterfaceParam<Types>[],
-        Table extends keyof Types['DrizzleRelations'],
-        Selection extends
-          | DBQueryConfig<'one', Types['DrizzleRelations'], Types['DrizzleRelations'][Table]>
-          | true,
-        Shape = BuildQueryResult<
-          Types['DrizzleRelations'],
-          Types['DrizzleRelations'][Table],
-          true extends Selection ? true : Selection & { columns: {} }
-        >,
-      >(
-        table: Table,
-        options: DrizzleInterfaceOptions<Types, Table, Shape, Selection, Interfaces>,
-      ) => DrizzleInterfaceRef<Types, Table, Shape>;
+    drizzleInterface: <
+      const Interfaces extends InterfaceParam<Types>[],
+      Table extends keyof Types['DrizzleRelations'],
+      Selection extends
+        | DBQueryConfig<'one', Types['DrizzleRelations'], Types['DrizzleRelations'][Table]>
+        | true,
+      Shape = BuildQueryResult<
+        Types['DrizzleRelations'],
+        Types['DrizzleRelations'][Table],
+        true extends Selection ? true : Selection & { columns: {} }
+      >,
+    >(
+      table: Table,
+      options: DrizzleInterfaceOptions<Types, Table, Shape, Selection, Interfaces>,
+    ) => DrizzleInterfaceRef<Types, Table, Shape>;
 
-      drizzleNode: 'relay' extends PluginName
-        ? <
-            const Interfaces extends InterfaceParam<Types>[],
-            Table extends keyof Types['DrizzleRelations'],
-            Selection extends
-              | DBQueryConfig<'one', Types['DrizzleRelations'], Types['DrizzleRelations'][Table]>
-              | true,
-            IDColumns,
-            Shape = BuildQueryResult<
-              Types['DrizzleRelations'],
-              Types['DrizzleRelations'][Table],
-              true extends Selection ? true : Selection & { columns: {} }
-            >,
-          >(
-            table: Table,
-            options: DrizzleNodeOptions<Types, Table, Shape, Selection, Interfaces, IDColumns>,
-          ) => DrizzleNodeRef<Types, Table, Shape, ShapeFromIdColumns<Types, Table, IDColumns>>
-        : '@pothos/plugin-relay is required to use this method';
+    drizzleNode: 'relay' extends PluginName
+      ? <
+          const Interfaces extends InterfaceParam<Types>[],
+          Table extends keyof Types['DrizzleRelations'],
+          Selection extends
+            | DBQueryConfig<'one', Types['DrizzleRelations'], Types['DrizzleRelations'][Table]>
+            | true,
+          IDColumns,
+          Shape = BuildQueryResult<
+            Types['DrizzleRelations'],
+            Types['DrizzleRelations'][Table],
+            true extends Selection ? true : Selection & { columns: {} }
+          >,
+        >(
+          table: Table,
+          options: DrizzleNodeOptions<Types, Table, Shape, Selection, Interfaces, IDColumns>,
+        ) => DrizzleNodeRef<Types, Table, Shape, ShapeFromIdColumns<Types, Table, IDColumns>>
+      : '@pothos/plugin-relay is required to use this method';
 
-      drizzleObjectField: <
-        Type extends DrizzleObjectRef<Types> | keyof Types['DrizzleRelations'],
-        TableConfig extends TableRelationalConfig = Type extends DrizzleObjectRef<Types>
-          ? Type[typeof drizzleTableKey]
-          : Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
-        Shape extends {} = Type extends DrizzleObjectRef<
-          Types,
-          keyof Types['DrizzleRelations'],
-          infer S
-        >
-          ? S & { [drizzleTableName]?: TableConfig['name'] }
-          : BuildQueryResult<Types['DrizzleRelations'], TableConfig, true> & {
-              [drizzleTableName]?: Type;
-            },
-      >(
-        type: Type,
-        fieldName: string,
-        field: (t: DrizzleObjectFieldBuilder<Types, TableConfig, Shape>) => FieldRef<Types>,
-      ) => void;
+    drizzleObjectField: <
+      Type extends DrizzleObjectRef<Types> | keyof Types['DrizzleRelations'],
+      TableConfig extends TableRelationalConfig = Type extends DrizzleObjectRef<Types>
+        ? Type[typeof drizzleTableKey]
+        : Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
+      Shape extends {} = Type extends DrizzleObjectRef<
+        Types,
+        keyof Types['DrizzleRelations'],
+        infer S
+      >
+        ? S & { [drizzleTableName]?: TableConfig['name'] }
+        : BuildQueryResult<Types['DrizzleRelations'], TableConfig, true> & {
+            [drizzleTableName]?: Type;
+          },
+    >(
+      type: Type,
+      fieldName: string,
+      field: (
+        t: DrizzleObjectFieldBuilder<Types, TableConfig, Shape>,
+      ) => PothosSchemaTypes.FieldRef<Types>,
+    ) => void;
 
-      drizzleInterfaceField: <
-        Type extends DrizzleInterfaceRef<Types> | keyof Types['DrizzleRelations'],
-        TableConfig extends TableRelationalConfig = Type extends DrizzleInterfaceRef<Types>
-          ? Type[typeof drizzleTableKey]
-          : Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
-        Shape extends {} = Type extends DrizzleInterfaceRef<
-          Types,
-          keyof Types['DrizzleRelations'],
-          infer S
-        >
-          ? S & { [drizzleTableName]?: TableConfig['name'] }
-          : BuildQueryResult<Types['DrizzleRelations'], TableConfig, true> & {
-              [drizzleTableName]?: Type;
-            },
-      >(
-        type: Type,
-        fieldName: string,
-        field: (t: DrizzleObjectFieldBuilder<Types, TableConfig, Shape>) => FieldRef<Types>,
-      ) => void;
+    drizzleInterfaceField: <
+      Type extends DrizzleInterfaceRef<Types> | keyof Types['DrizzleRelations'],
+      TableConfig extends TableRelationalConfig = Type extends DrizzleInterfaceRef<Types>
+        ? Type[typeof drizzleTableKey]
+        : Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
+      Shape extends {} = Type extends DrizzleInterfaceRef<
+        Types,
+        keyof Types['DrizzleRelations'],
+        infer S
+      >
+        ? S & { [drizzleTableName]?: TableConfig['name'] }
+        : BuildQueryResult<Types['DrizzleRelations'], TableConfig, true> & {
+            [drizzleTableName]?: Type;
+          },
+    >(
+      type: Type,
+      fieldName: string,
+      field: (
+        t: DrizzleObjectFieldBuilder<Types, TableConfig, Shape>,
+      ) => PothosSchemaTypes.FieldRef<Types>,
+    ) => void;
 
-      drizzleObjectFields: <
-        Type extends DrizzleObjectRef<Types> | keyof Types['DrizzleRelations'],
-        TableConfig extends TableRelationalConfig = Type extends DrizzleObjectRef<Types>
-          ? Type[typeof drizzleTableKey]
-          : Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
-        Shape extends {} = Type extends DrizzleObjectRef<
-          Types,
-          keyof Types['DrizzleRelations'],
-          infer S
-        >
-          ? S & { [drizzleTableName]?: TableConfig['name'] }
-          : BuildQueryResult<Types['DrizzleRelations'], TableConfig, true> & {
-              [drizzleTableName]?: Type;
-            },
-      >(
-        type: Type,
-        fields: (t: DrizzleObjectFieldBuilder<Types, TableConfig, Shape>) => FieldMap,
-      ) => void;
+    drizzleObjectFields: <
+      Type extends DrizzleObjectRef<Types> | keyof Types['DrizzleRelations'],
+      TableConfig extends TableRelationalConfig = Type extends DrizzleObjectRef<Types>
+        ? Type[typeof drizzleTableKey]
+        : Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
+      Shape extends {} = Type extends DrizzleObjectRef<
+        Types,
+        keyof Types['DrizzleRelations'],
+        infer S
+      >
+        ? S & { [drizzleTableName]?: TableConfig['name'] }
+        : BuildQueryResult<Types['DrizzleRelations'], TableConfig, true> & {
+            [drizzleTableName]?: Type;
+          },
+    >(
+      type: Type,
+      fields: (t: DrizzleObjectFieldBuilder<Types, TableConfig, Shape>) => FieldMap,
+    ) => void;
 
-      drizzleInterfaceFields: <
-        Type extends DrizzleInterfaceRef<Types> | keyof Types['DrizzleRelations'],
-        TableConfig extends TableRelationalConfig = Type extends DrizzleInterfaceRef<Types>
-          ? Type[typeof drizzleTableKey]
-          : Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
-        Shape extends {} = Type extends DrizzleInterfaceRef<
-          Types,
-          keyof Types['DrizzleRelations'],
-          infer S
-        >
-          ? S & { [drizzleTableName]?: TableConfig['name'] }
-          : BuildQueryResult<Types['DrizzleRelations'], TableConfig, true> & {
-              [drizzleTableName]?: Type;
-            },
-      >(
-        type: Type,
-        fields: (t: DrizzleObjectFieldBuilder<Types, TableConfig, Shape>) => FieldMap,
-      ) => void;
+    drizzleInterfaceFields: <
+      Type extends DrizzleInterfaceRef<Types> | keyof Types['DrizzleRelations'],
+      TableConfig extends TableRelationalConfig = Type extends DrizzleInterfaceRef<Types>
+        ? Type[typeof drizzleTableKey]
+        : Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
+      Shape extends {} = Type extends DrizzleInterfaceRef<
+        Types,
+        keyof Types['DrizzleRelations'],
+        infer S
+      >
+        ? S & { [drizzleTableName]?: TableConfig['name'] }
+        : BuildQueryResult<Types['DrizzleRelations'], TableConfig, true> & {
+            [drizzleTableName]?: Type;
+          },
+    >(
+      type: Type,
+      fields: (t: DrizzleObjectFieldBuilder<Types, TableConfig, Shape>) => FieldMap,
+    ) => void;
 
-      // drizzleGraphQLOrderBy: 'addGraphQL' extends PluginName
-      //   ? <Table extends keyof Types['DrizzleRelations']>(
-      //       table: Table,
-      //       type: GraphQLInputObjectType,
-      //       ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, {}>]>
-      //     ) => InputObjectRef<Types, SQL | SQL[]>
-      //   : '@pothos/plugin-add-graphql is required to use this method';
+    // drizzleGraphQLOrderBy: 'addGraphQL' extends PluginName
+    //   ? <Table extends keyof Types['DrizzleRelations']>(
+    //       table: Table,
+    //       type: GraphQLInputObjectType,
+    //       ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, {}>]>
+    //     ) => InputObjectRef<Types, SQL | SQL[]>
+    //   : '@pothos/plugin-add-graphql is required to use this method';
 
-      // drizzleGraphQLFilters: 'addGraphQL' extends PluginName
-      //   ? <Table extends keyof Types['DrizzleRelations']>(
-      //       table: Table,
-      //       type: GraphQLInputObjectType,
-      //       ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, {}>]>
-      //     ) => InputObjectRef<Types, SQL>
-      //   : '@pothos/plugin-add-graphql is required to use this method';
+    // drizzleGraphQLFilters: 'addGraphQL' extends PluginName
+    //   ? <Table extends keyof Types['DrizzleRelations']>(
+    //       table: Table,
+    //       type: GraphQLInputObjectType,
+    //       ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, {}>]>
+    //     ) => InputObjectRef<Types, SQL>
+    //   : '@pothos/plugin-add-graphql is required to use this method';
 
-      // drizzleGraphQLInsert: 'addGraphQL' extends PluginName
-      //   ? <Table extends keyof Types['DrizzleRelations']>(
-      //       table: Table,
-      //       type: GraphQLInputObjectType,
-      //       ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, {}>]>
-      //     ) => InputObjectRef<Types, Record<string, unknown>>
-      //   : '@pothos/plugin-add-graphql is required to use this method';
+    // drizzleGraphQLInsert: 'addGraphQL' extends PluginName
+    //   ? <Table extends keyof Types['DrizzleRelations']>(
+    //       table: Table,
+    //       type: GraphQLInputObjectType,
+    //       ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, {}>]>
+    //     ) => InputObjectRef<Types, Record<string, unknown>>
+    //   : '@pothos/plugin-add-graphql is required to use this method';
 
-      // drizzleGraphQLUpdate: 'addGraphQL' extends PluginName
-      //   ? <Table extends keyof Types['DrizzleRelations']>(
-      //       table: Table,
-      //       type: GraphQLInputObjectType,
-      //       ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, {}>]>
-      //     ) => InputObjectRef<Types, Record<string, unknown>>
-      //   : '@pothos/plugin-add-graphql is required to use this method';
-    }
+    // drizzleGraphQLUpdate: 'addGraphQL' extends PluginName
+    //   ? <Table extends keyof Types['DrizzleRelations']>(
+    //       table: Table,
+    //       type: GraphQLInputObjectType,
+    //       ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, {}>]>
+    //     ) => InputObjectRef<Types, Record<string, unknown>>
+    //   : '@pothos/plugin-add-graphql is required to use this method';
+  }
 
-    export interface PothosKindToGraphQLType {
-      DrizzleObject: 'Object';
-    }
+  export interface PothosKindToGraphQLType {
+    DrizzleObject: 'Object';
+  }
 
-    export interface FieldOptionsByKind<
-      Types extends SchemaTypes,
+  export interface FieldOptionsByKind<
+    Types extends SchemaTypes,
+    ParentShape,
+    Type extends TypeParam<Types>,
+    Nullable extends FieldNullability<Type>,
+    Args extends InputFieldMap,
+    ResolveShape,
+    ResolveReturnShape,
+  > {
+    DrizzleObject: DrizzleObjectFieldOptions<
+      Types,
       ParentShape,
-      Type extends TypeParam<Types>,
-      Nullable extends FieldNullability<Type>,
+      Type,
+      Nullable,
+      Args,
+      ResolveShape,
+      ResolveReturnShape
+    >;
+  }
+
+  export interface RootFieldBuilder<
+    Types extends SchemaTypes,
+    ParentShape,
+    Kind extends FieldKind = FieldKind,
+  > {
+    drizzleField: <
       Args extends InputFieldMap,
+      Param extends
+        | keyof Types['DrizzleRelations']
+        | [keyof Types['DrizzleRelations']]
+        // biome-ignore lint/suspicious/noExplicitAny: this is fine
+        | DrizzleRef<any>
+        // biome-ignore lint/suspicious/noExplicitAny: this is fine
+        | [DrizzleRef<any>],
+      Nullable extends FieldNullability<Type>,
       ResolveShape,
       ResolveReturnShape,
-    > {
-      DrizzleObject: DrizzleObjectFieldOptions<
-        Types,
-        ParentShape,
-        Type,
-        Nullable,
-        Args,
-        ResolveShape,
-        ResolveReturnShape
-      >;
-    }
-
-    export interface RootFieldBuilder<
-      Types extends SchemaTypes,
-      ParentShape,
-      Kind extends FieldKind = FieldKind,
-    > {
-      drizzleField: <
-        Args extends InputFieldMap,
-        Param extends
-          | keyof Types['DrizzleRelations']
-          | [keyof Types['DrizzleRelations']]
-          // biome-ignore lint/suspicious/noExplicitAny: this is fine
-          | DrizzleRef<any>
-          // biome-ignore lint/suspicious/noExplicitAny: this is fine
-          | [DrizzleRef<any>],
-        Nullable extends FieldNullability<Type>,
-        ResolveShape,
-        ResolveReturnShape,
-        Table extends
-          keyof Types['DrizzleRelations'] = Param extends keyof Types['DrizzleRelations']
-          ? Param
-          : Param extends [keyof Types['DrizzleRelations']]
-            ? Param[0]
+      Table extends keyof Types['DrizzleRelations'] = Param extends keyof Types['DrizzleRelations']
+        ? Param
+        : Param extends [keyof Types['DrizzleRelations']]
+          ? Param[0]
+          : // biome-ignore lint/suspicious/noExplicitAny: this is fine
+            Param extends DrizzleRef<any, infer T>
+            ? T & keyof Types['DrizzleRelations']
             : // biome-ignore lint/suspicious/noExplicitAny: this is fine
-              Param extends DrizzleRef<any, infer T>
+              Param extends [DrizzleRef<any, infer T>]
               ? T & keyof Types['DrizzleRelations']
-              : // biome-ignore lint/suspicious/noExplicitAny: this is fine
-                Param extends [DrizzleRef<any, infer T>]
-                ? T & keyof Types['DrizzleRelations']
-                : never,
-        // biome-ignore lint/suspicious/noExplicitAny: this is fine
-        Type extends TypeParam<Types> = Param extends DrizzleRef<any> | [DrizzleRef<any>]
-          ? Param
-          : Param extends [unknown]
-            ? [
-                ObjectRef<
-                  Types,
-                  | BuildQueryResult<
-                      Types['DrizzleRelations'],
-                      Types['DrizzleRelations'][Table],
-                      true
-                    >
-                  | {
-                      $pothosQueryFor: Table | undefined;
-                    }
-                >,
-              ]
-            : ObjectRef<
+              : never,
+      // biome-ignore lint/suspicious/noExplicitAny: this is fine
+      Type extends TypeParam<Types> = Param extends DrizzleRef<any> | [DrizzleRef<any>]
+        ? Param
+        : Param extends [unknown]
+          ? [
+              PothosSchemaTypes.ObjectRef<
                 Types,
                 | BuildQueryResult<
                     Types['DrizzleRelations'],
@@ -299,195 +290,205 @@ declare global {
                     $pothosQueryFor: Table | undefined;
                   }
               >,
-      >(
-        options: DrizzleFieldOptions<
-          Types,
-          ParentShape,
-          Table,
-          Type,
-          Nullable,
-          Args,
-          Kind,
-          ResolveShape,
-          ResolveReturnShape,
-          Param
-        >,
-      ) => FieldRef<Types, ShapeFromTypeParam<Types, Type, Nullable>>;
-      drizzleConnection: 'relay' extends PluginName
-        ? <
-            Type extends // biome-ignore lint/suspicious/noExplicitAny: this is fine
-            DrizzleRef<any, keyof Types['DrizzleRelations']> | keyof Types['DrizzleRelations'],
-            Nullable extends boolean,
-            ResolveReturnShape,
-            Args extends InputFieldMap = {},
-            Shape = Type extends DrizzleRef<
-              // biome-ignore lint/suspicious/noExplicitAny: this is fine
-              any,
-              keyof Types['DrizzleRelations'],
-              infer S
-            >
-              ? S
-              :
-                  | BuildQueryResult<
-                      Types['DrizzleRelations'],
-                      Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
-                      true
-                    >
-                  | {
-                      $pothosQueryFor: Type | undefined;
-                    },
-            const ConnectionInterfaces extends InterfaceParam<Types>[] = [],
-            const EdgeInterfaces extends InterfaceParam<Types>[] = [],
-          >(
-            options: DrizzleConnectionFieldOptions<
-              Types,
-              ParentShape,
-              Type,
-              // biome-ignore lint/suspicious/noExplicitAny: this is fine
-              Types['DrizzleRelations'][Type extends DrizzleRef<any, infer K>
-                ? K
-                : Type & keyof Types['DrizzleRelations']],
-              ObjectRef<Types, Shape>,
-              Nullable,
-              Args,
-              ResolveReturnShape,
-              Kind
-            >,
-            ...args: NormalizeArgs<
-              [
-                connectionOptions:
-                  | ConnectionObjectOptions<
-                      Types,
-                      ObjectRef<Types, Shape>,
-                      false,
-                      false,
-                      DrizzleConnectionShape<Types, Shape, ParentShape, Args>,
-                      ConnectionInterfaces
-                    >
-                  | ObjectRef<
-                      Types,
-                      ShapeFromConnection<ConnectionShapeHelper<Types, Shape, false>>
-                    >,
-                edgeOptions:
-                  | ConnectionEdgeObjectOptions<
-                      Types,
-                      ObjectRef<Types, Shape>,
-                      false,
-                      DrizzleConnectionShape<Types, Shape, ParentShape, Args>,
-                      EdgeInterfaces
-                    >
-                  | ObjectRef<
-                      Types,
-                      {
-                        cursor: string;
-                        node?: Shape | null | undefined;
-                      }
-                    >,
-              ],
-              0
-            >
-          ) => FieldRef<Types, ShapeFromConnection<ConnectionShapeHelper<Types, Shape, Nullable>>>
-        : '@pothos/plugin-relay is required to use this method';
-      drizzleFieldWithInput: 'withInput' extends PluginName
-        ? <
-            Param extends
-              | keyof Types['DrizzleRelations']
-              | [keyof Types['DrizzleRelations']]
-              // biome-ignore lint/suspicious/noExplicitAny: this is fine
-              | DrizzleRef<any>
-              // biome-ignore lint/suspicious/noExplicitAny: this is fine
-              | [DrizzleRef<any>],
-            Nullable extends FieldNullability<Type>,
-            ResolveShape,
-            ResolveReturnShape,
-            ArgRequired extends boolean,
-            Fields extends InputFieldMap = {},
-            Args extends InputFieldMap = {},
-            InputName extends string = 'input',
-            Table extends
-              keyof Types['DrizzleRelations'] = Param extends keyof Types['DrizzleRelations']
-              ? Param
-              : Param extends [keyof Types['DrizzleRelations']]
-                ? Param[0]
-                : // biome-ignore lint/suspicious/noExplicitAny: this is fine
-                  Param extends DrizzleRef<any, infer T>
-                  ? T & keyof Types['DrizzleRelations']
-                  : // biome-ignore lint/suspicious/noExplicitAny: this is fine
-                    Param extends [DrizzleRef<any, infer T>]
-                    ? T & keyof Types['DrizzleRelations']
-                    : never,
-            Type extends TypeParam<Types> = ObjectRef<
+            ]
+          : PothosSchemaTypes.ObjectRef<
               Types,
               | BuildQueryResult<Types['DrizzleRelations'], Types['DrizzleRelations'][Table], true>
               | {
                   $pothosQueryFor: Table | undefined;
                 }
             >,
-          >(
-            options: DrizzleFieldWithInputOptions<
-              Types,
-              ParentShape,
-              Table,
-              Type,
-              Nullable,
-              Args,
-              Kind,
-              ResolveShape,
-              ResolveReturnShape,
-              Param,
-              InputName,
-              Fields,
-              boolean extends ArgRequired
-                ? (Types & { WithInputArgRequired: boolean })['WithInputArgRequired']
-                : ArgRequired
-            >,
-          ) => FieldRef<Types, ShapeFromTypeParam<Types, Type, Nullable>>
-        : '@pothos/plugin-with-input is required to use this method';
-    }
-
-    export interface ConnectionFieldOptions<
-      Types extends SchemaTypes,
-      ParentShape,
-      Type extends OutputType<Types>,
-      Nullable extends boolean,
-      EdgeNullability extends FieldNullability<[unknown]>,
-      NodeNullability extends boolean,
-      Args extends InputFieldMap,
-      ResolveReturnShape,
-    > {}
-
-    export interface ConnectionObjectOptions<
-      Types extends SchemaTypes,
-      Type extends OutputType<Types>,
-      EdgeNullability extends FieldNullability<[unknown]>,
-      NodeNullability extends boolean,
-      Resolved,
-      Interfaces extends InterfaceParam<Types>[] = [],
-    > {}
-
-    export interface ConnectionEdgeObjectOptions<
-      Types extends SchemaTypes,
-      Type extends OutputType<Types>,
-      NodeNullability extends boolean,
-      Resolved,
-      Interfaces extends InterfaceParam<Types>[] = [],
-    > {}
-
-    export interface DefaultConnectionArguments {
-      first?: number | null | undefined;
-      last?: number | null | undefined;
-      before?: string | null | undefined;
-      after?: string | null | undefined;
-    }
-
-    export interface ConnectionShapeHelper<Types extends SchemaTypes, T, Nullable> {}
-
-    export interface FieldWithInputBaseOptions<
-      Types extends SchemaTypes,
-      Args extends InputFieldMap,
-      Fields extends InputFieldMap,
-      InputName extends string,
-      ArgRequired extends boolean,
-    > {}
+    >(
+      options: DrizzleFieldOptions<
+        Types,
+        ParentShape,
+        Table,
+        Type,
+        Nullable,
+        Args,
+        Kind,
+        ResolveShape,
+        ResolveReturnShape,
+        Param
+      >,
+    ) => PothosSchemaTypes.FieldRef<Types, ShapeFromTypeParam<Types, Type, Nullable>>;
+    drizzleConnection: 'relay' extends PluginName
+      ? <
+          Type extends // biome-ignore lint/suspicious/noExplicitAny: this is fine
+          DrizzleRef<any, keyof Types['DrizzleRelations']> | keyof Types['DrizzleRelations'],
+          Nullable extends boolean,
+          ResolveReturnShape,
+          Args extends InputFieldMap = {},
+          Shape = Type extends DrizzleRef<
+            // biome-ignore lint/suspicious/noExplicitAny: this is fine
+            any,
+            keyof Types['DrizzleRelations'],
+            infer S
+          >
+            ? S
+            :
+                | BuildQueryResult<
+                    Types['DrizzleRelations'],
+                    Types['DrizzleRelations'][Type & keyof Types['DrizzleRelations']],
+                    true
+                  >
+                | {
+                    $pothosQueryFor: Type | undefined;
+                  },
+          const ConnectionInterfaces extends InterfaceParam<Types>[] = [],
+          const EdgeInterfaces extends InterfaceParam<Types>[] = [],
+        >(
+          options: DrizzleConnectionFieldOptions<
+            Types,
+            ParentShape,
+            Type,
+            // biome-ignore lint/suspicious/noExplicitAny: this is fine
+            Types['DrizzleRelations'][Type extends DrizzleRef<any, infer K>
+              ? K
+              : Type & keyof Types['DrizzleRelations']],
+            PothosSchemaTypes.ObjectRef<Types, Shape>,
+            Nullable,
+            Args,
+            ResolveReturnShape,
+            Kind
+          >,
+          ...args: NormalizeArgs<
+            [
+              connectionOptions:
+                | ConnectionObjectOptions<
+                    Types,
+                    PothosSchemaTypes.ObjectRef<Types, Shape>,
+                    false,
+                    false,
+                    DrizzleConnectionShape<Types, Shape, ParentShape, Args>,
+                    ConnectionInterfaces
+                  >
+                | PothosSchemaTypes.ObjectRef<
+                    Types,
+                    ShapeFromConnection<ConnectionShapeHelper<Types, Shape, false>>
+                  >,
+              edgeOptions:
+                | ConnectionEdgeObjectOptions<
+                    Types,
+                    PothosSchemaTypes.ObjectRef<Types, Shape>,
+                    false,
+                    DrizzleConnectionShape<Types, Shape, ParentShape, Args>,
+                    EdgeInterfaces
+                  >
+                | PothosSchemaTypes.ObjectRef<
+                    Types,
+                    {
+                      cursor: string;
+                      node?: Shape | null | undefined;
+                    }
+                  >,
+            ],
+            0
+          >
+        ) => PothosSchemaTypes.FieldRef<
+          Types,
+          ShapeFromConnection<ConnectionShapeHelper<Types, Shape, Nullable>>
+        >
+      : '@pothos/plugin-relay is required to use this method';
+    drizzleFieldWithInput: 'withInput' extends PluginName
+      ? <
+          Param extends
+            | keyof Types['DrizzleRelations']
+            | [keyof Types['DrizzleRelations']]
+            // biome-ignore lint/suspicious/noExplicitAny: this is fine
+            | DrizzleRef<any>
+            // biome-ignore lint/suspicious/noExplicitAny: this is fine
+            | [DrizzleRef<any>],
+          Nullable extends FieldNullability<Type>,
+          ResolveShape,
+          ResolveReturnShape,
+          ArgRequired extends boolean,
+          Fields extends InputFieldMap = {},
+          Args extends InputFieldMap = {},
+          InputName extends string = 'input',
+          Table extends
+            keyof Types['DrizzleRelations'] = Param extends keyof Types['DrizzleRelations']
+            ? Param
+            : Param extends [keyof Types['DrizzleRelations']]
+              ? Param[0]
+              : // biome-ignore lint/suspicious/noExplicitAny: this is fine
+                Param extends DrizzleRef<any, infer T>
+                ? T & keyof Types['DrizzleRelations']
+                : // biome-ignore lint/suspicious/noExplicitAny: this is fine
+                  Param extends [DrizzleRef<any, infer T>]
+                  ? T & keyof Types['DrizzleRelations']
+                  : never,
+          Type extends TypeParam<Types> = PothosSchemaTypes.ObjectRef<
+            Types,
+            | BuildQueryResult<Types['DrizzleRelations'], Types['DrizzleRelations'][Table], true>
+            | {
+                $pothosQueryFor: Table | undefined;
+              }
+          >,
+        >(
+          options: DrizzleFieldWithInputOptions<
+            Types,
+            ParentShape,
+            Table,
+            Type,
+            Nullable,
+            Args,
+            Kind,
+            ResolveShape,
+            ResolveReturnShape,
+            Param,
+            InputName,
+            Fields,
+            boolean extends ArgRequired
+              ? (Types & { WithInputArgRequired: boolean })['WithInputArgRequired']
+              : ArgRequired
+          >,
+        ) => PothosSchemaTypes.FieldRef<Types, ShapeFromTypeParam<Types, Type, Nullable>>
+      : '@pothos/plugin-with-input is required to use this method';
   }
+
+  export interface ConnectionFieldOptions<
+    Types extends SchemaTypes,
+    ParentShape,
+    Type extends OutputType<Types>,
+    Nullable extends boolean,
+    EdgeNullability extends FieldNullability<[unknown]>,
+    NodeNullability extends boolean,
+    Args extends InputFieldMap,
+    ResolveReturnShape,
+  > {}
+
+  export interface ConnectionObjectOptions<
+    Types extends SchemaTypes,
+    Type extends OutputType<Types>,
+    EdgeNullability extends FieldNullability<[unknown]>,
+    NodeNullability extends boolean,
+    Resolved,
+    Interfaces extends InterfaceParam<Types>[] = [],
+  > {}
+
+  export interface ConnectionEdgeObjectOptions<
+    Types extends SchemaTypes,
+    Type extends OutputType<Types>,
+    NodeNullability extends boolean,
+    Resolved,
+    Interfaces extends InterfaceParam<Types>[] = [],
+  > {}
+
+  export interface DefaultConnectionArguments {
+    first?: number | null | undefined;
+    last?: number | null | undefined;
+    before?: string | null | undefined;
+    after?: string | null | undefined;
+  }
+
+  export interface ConnectionShapeHelper<Types extends SchemaTypes, T, Nullable> {}
+
+  export interface FieldWithInputBaseOptions<
+    Types extends SchemaTypes,
+    Args extends InputFieldMap,
+    Fields extends InputFieldMap,
+    InputName extends string,
+    ArgRequired extends boolean,
+  > {}
 }

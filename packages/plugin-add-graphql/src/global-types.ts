@@ -1,4 +1,12 @@
-import type { NormalizeArgs, SchemaTypes } from '@pothos/core';
+import type {
+  EnumRef,
+  InputObjectRef,
+  InterfaceRef,
+  NormalizeArgs,
+  ObjectRef,
+  SchemaTypes,
+  UnionRef,
+} from '@pothos/core';
 import type {
   GraphQLEnumType,
   GraphQLInputObjectType,
@@ -18,48 +26,44 @@ import type {
   EnumValuesWithShape,
 } from './types.js';
 
-declare global {
-  export namespace PothosSchemaTypes {
-    export interface Plugins<Types extends SchemaTypes> {
-      addGraphQL: PothosAddGraphQLPlugin<Types>;
-    }
+declare module '@pothos/core/types' {
+  export interface Plugins<Types extends SchemaTypes> {
+    addGraphQL: PothosAddGraphQLPlugin<Types>;
+  }
 
-    export interface SchemaBuilderOptions<Types extends SchemaTypes> {
-      add?: {
-        schema?: GraphQLSchema;
-        types?: GraphQLNamedType[] | Record<string, GraphQLNamedType>;
-      };
-    }
+  export interface SchemaBuilderOptions<Types extends SchemaTypes> {
+    add?: {
+      schema?: GraphQLSchema;
+      types?: GraphQLNamedType[] | Record<string, GraphQLNamedType>;
+    };
+  }
 
-    export interface SchemaBuilder<Types extends SchemaTypes> {
-      addGraphQLObject: <Shape>(
-        type: GraphQLObjectType<Shape>,
-        ...args: NormalizeArgs<[options: AddGraphQLObjectTypeOptions<Types, Shape>]>
-      ) => ObjectRef<Types, Shape>;
+  export interface SchemaBuilder<Types extends SchemaTypes> {
+    addGraphQLObject: <Shape>(
+      type: GraphQLObjectType<Shape>,
+      ...args: NormalizeArgs<[options: AddGraphQLObjectTypeOptions<Types, Shape>]>
+    ) => ObjectRef<Types, Shape>;
 
-      addGraphQLInterface: <Shape>(
-        type: GraphQLInterfaceType,
-        ...args: NormalizeArgs<[options: AddGraphQLInterfaceTypeOptions<Types, Shape>]>
-      ) => InterfaceRef<Types, Shape>;
+    addGraphQLInterface: <Shape>(
+      type: GraphQLInterfaceType,
+      ...args: NormalizeArgs<[options: AddGraphQLInterfaceTypeOptions<Types, Shape>]>
+    ) => InterfaceRef<Types, Shape>;
 
-      addGraphQLUnion: <Shape>(
-        type: GraphQLUnionType,
-        ...args: NormalizeArgs<
-          [options: AddGraphQLUnionTypeOptions<Types, ObjectRef<Types, Shape>>]
-        >
-      ) => UnionRef<Types, Shape>;
+    addGraphQLUnion: <Shape>(
+      type: GraphQLUnionType,
+      ...args: NormalizeArgs<[options: AddGraphQLUnionTypeOptions<Types, ObjectRef<Types, Shape>>]>
+    ) => UnionRef<Types, Shape>;
 
-      addGraphQLEnum: <Shape extends number | string>(
-        type: GraphQLEnumType,
-        ...args: NormalizeArgs<
-          [options: AddGraphQLEnumTypeOptions<Types, EnumValuesWithShape<Types, Shape>>]
-        >
-      ) => EnumRef<Types, Shape>;
+    addGraphQLEnum: <Shape extends number | string>(
+      type: GraphQLEnumType,
+      ...args: NormalizeArgs<
+        [options: AddGraphQLEnumTypeOptions<Types, EnumValuesWithShape<Types, Shape>>]
+      >
+    ) => EnumRef<Types, Shape>;
 
-      addGraphQLInput: <Shape extends {}>(
-        type: GraphQLInputObjectType,
-        ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, Shape>]>
-      ) => InputObjectRef<Types, Shape>;
-    }
+    addGraphQLInput: <Shape extends {}>(
+      type: GraphQLInputObjectType,
+      ...args: NormalizeArgs<[options: AddGraphQLInputTypeOptions<Types, Shape>]>
+    ) => InputObjectRef<Types, Shape>;
   }
 }

@@ -1,4 +1,9 @@
-import { type ObjectRef, PothosSchemaError, type SchemaTypes } from '@pothos/core';
+import {
+  type ObjectRef,
+  PothosSchemaError,
+  type PothosSchemaTypes,
+  type SchemaTypes,
+} from '@pothos/core';
 import { PrismaInterfaceRef, type PrismaRef } from '../interface-ref.js';
 import { PrismaObjectRef } from '../object-ref.js';
 import type { PrismaClient, PrismaDelegate, PrismaModelTypes } from '../types.js';

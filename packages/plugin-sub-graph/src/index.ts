@@ -4,6 +4,7 @@ import SchemaBuilder, {
   type PothosInputFieldConfig,
   type PothosOutputFieldConfig,
   PothosSchemaError,
+  type PothosSchemaTypes,
   type PothosTypeConfig,
   type SchemaTypes,
 } from '@pothos/core';

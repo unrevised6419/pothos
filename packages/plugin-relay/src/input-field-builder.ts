@@ -2,6 +2,7 @@ import {
   type FieldRequiredness,
   InputFieldBuilder,
   type ObjectRef,
+  type PothosSchemaTypes,
   type SchemaTypes,
 } from '@pothos/core';
 import type { GlobalIDInputFieldOptions, GlobalIDListInputFieldOptions } from './types.js';

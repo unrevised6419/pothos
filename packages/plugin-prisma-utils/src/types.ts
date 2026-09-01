@@ -6,6 +6,7 @@ import type {
   InputFieldRef,
   InputRef,
   InputType,
+  PothosSchemaTypes,
   SchemaTypes,
 } from '@pothos/core';
 import type { PrismaModelTypes } from '@pothos/plugin-prisma';

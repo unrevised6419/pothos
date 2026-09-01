@@ -3,6 +3,7 @@ import SchemaBuilder, {
   type ObjectParam,
   type OutputRef,
   PothosSchemaError,
+  type PothosSchemaTypes,
   type SchemaTypes,
   type ShapeFromTypeParam,
 } from '@pothos/core';

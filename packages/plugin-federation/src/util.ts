@@ -1,4 +1,4 @@
-import type { SchemaTypes } from '@pothos/core';
+import type { PothosSchemaTypes, SchemaTypes } from '@pothos/core';
 import type { GraphQLResolveInfo } from 'graphql';
 import type { KeyDirective, Selection } from './types.js';
 
