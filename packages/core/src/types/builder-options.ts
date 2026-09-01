@@ -26,6 +26,7 @@ import type {
   RemoveNeverKeys,
   Simplify,
 } from './utils.js';
+import { PothosSchemaTypes } from './index.js';
 
 export type AddVersionedDefaultsToBuilderOptions<
   Types extends SchemaTypes,

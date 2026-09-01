@@ -4,6 +4,7 @@ import {
   type OutputRef,
   outputShapeKey,
   type PothosEnumTypeConfig,
+  PothosSchemaTypes,
   type SchemaTypes,
 } from '../types/index.js';
 import { BaseTypeRef } from './base.js';

@@ -1,4 +1,4 @@
-import SchemaBuilder from '../../../src';
+import SchemaBuilder, { type PothosSchemaTypes } from '../../../src';
 
 export interface SchemaTypes {
   Objects: {

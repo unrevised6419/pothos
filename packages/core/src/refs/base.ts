@@ -1,5 +1,5 @@
 import { PothosSchemaError } from '../errors.js';
-import type { SchemaTypes } from '../types/index.js';
+import type { PothosSchemaTypes, SchemaTypes } from '../types/index.js';
 
 export class BaseTypeRef<Types extends SchemaTypes, T = unknown>
   implements PothosSchemaTypes.BaseTypeRef<Types, T>

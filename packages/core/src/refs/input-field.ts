@@ -1,5 +1,6 @@
 import {
   inputFieldShapeKey,
+  PothosSchemaTypes,
   type PothosInputFieldConfig,
   type PothosTypeConfig,
   type SchemaTypes,

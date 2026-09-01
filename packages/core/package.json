@@ -6,12 +6,23 @@
   "types": "./dts/index.d.ts",
   "module": "./esm/index.js",
   "exports": {
-    "import": {
-      "default": "./esm/index.js"
+    ".": {
+      "import": {
+        "default": "./esm/index.js"
+      },
+      "require": {
+        "types": "./dts/index.d.ts",
+        "default": "./lib/index.js"
+      }
     },
-    "require": {
-      "types": "./dts/index.d.ts",
-      "default": "./lib/index.js"
+    "./types": {
+      "import": {
+        "default": "./esm/types/global/index.js"
+      },
+      "require": {
+        "types": "./dts/index.d.ts",
+        "default": "./lib/index.js"
+      }
     }
   },
   "scripts": {

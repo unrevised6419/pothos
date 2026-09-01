@@ -37,6 +37,7 @@ import type {
   NormalizeSchemeBuilderOptions,
   PothosInputFieldConfig,
   PothosOutputFieldConfig,
+  PothosSchemaTypes,
   PothosTypeConfig,
   RootName,
   SchemaTypes,

@@ -1,4 +1,4 @@
-import './global/index.js';
+export * as PothosSchemaTypes from './global/index.js';
 
 export * from './builder-options.js';
 export * from './configs.js';

@@ -2,6 +2,7 @@ import {
   type FieldKind,
   outputFieldShapeKey,
   type PothosOutputFieldConfig,
+  PothosSchemaTypes,
   type PothosTypeConfig,
   type SchemaTypes,
 } from '../types/index.js';
